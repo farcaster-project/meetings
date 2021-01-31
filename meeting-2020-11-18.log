@@ -1,0 +1,122 @@
+2020-11-18 17:05:04	z-bot[m]	<h4sh3d> let's do it by text
+2020-11-18 17:06:09	z-bot[m]	<h4sh3d> So!
+2020-11-18 17:06:10	z-bot[m]	Hello everyone
+2020-11-18 17:06:27	z-bot[m]	<lederstrumpf> Hi!
+2020-11-18 17:06:40	z-bot[m]	<zkao> hi
+2020-11-18 17:07:17	z-bot[m]	<zkao> so last week we slowly started working on the project
+2020-11-18 17:07:35	z-bot[m]	<h4sh3d> yep, we started the RFCs
+2020-11-18 17:07:49	z-bot[m]	<zkao> we decided to put the RFCs code on hackmd to accelerate the RFC development process
+2020-11-18 17:08:04	z-bot[m]	<zkao> without clashing with each other
+2020-11-18 17:08:18	z-bot[m]	<zkao> but that is being mirrored on the official github
+2020-11-18 17:08:28	z-bot[m]	<zkao> at farcaster-project
+2020-11-18 17:09:19	z-bot[m]	<h4sh3d> what are the steps to use the hackmd?
+2020-11-18 17:09:35	z-bot[m]	<zkao> I added the current team members
+2020-11-18 17:09:43	z-bot[m]	<zkao> oh, forgot Kayaba
+2020-11-18 17:10:08	z-bot[m]	<zkao> so everyone could edit, but it only makes sense to use for the people that are actively working on it
+2020-11-18 17:10:21	z-bot[m]	<zkao> especially if working at the same time
+2020-11-18 17:10:54	z-bot[m]	<zkao> anyhow, the normal github style works as well
+2020-11-18 17:11:20	TheCharlatan	where do we find the hackmd?
+2020-11-18 17:11:41	z-bot[m]	<zkao> for each new file, we have to link it though to a new hackmd file
+2020-11-18 17:12:18	TheCharlatan	Ah, never mind, it's at the top of each file.
+2020-11-18 17:12:40	z-bot[m]	<zkao> @**h4sh3d** any specific questions?
+2020-11-18 17:13:49	z-bot[m]	<h4sh3d> I think it's all good. Just use, on GitHub, the "Collaborate on HackMD" button and connect with your github account to edit.
+2020-11-18 17:14:12	z-bot[m]	<zkao> ping me if u have issues
+2020-11-18 17:14:22	z-bot[m]	<h4sh3d> thanks @**zkao** for this setup
+2020-11-18 17:14:46	z-bot[m]	<lederstrumpf> Also, it's possible to switch branches by changing the branch that one pulls from, but that switches the active branch for everyone.
+2020-11-18 17:14:51	z-bot[m]	<zkao> i bridged the entire #general stream in zulip with freenode #monero-swap, so whatever we discuss here will end up in freenode.
+2020-11-18 17:15:19	z-bot[m]	<zkao> @**lederstrumpf** we created a hackmd branch, USE THAT ONE ONLY
+2020-11-18 17:15:38	z-bot[m]	<lederstrumpf> ack
+2020-11-18 17:16:35	z-bot[m]	<h4sh3d> Ok. I propose we move on RFCs. I can describe the goal and the current state
+2020-11-18 17:17:14	z-bot[m]	<zkao> yes
+2020-11-18 17:17:44	z-bot[m]	<h4sh3d> The goal of these RFCs is to discuss the high level structure and the general design of farcaster.
+2020-11-18 17:18:46	z-bot[m]	<h4sh3d> Currently we have one main RFC called "architecture". In this RFC we started describing the different component and we started putting names on their interactions.
+2020-11-18 17:19:36	z-bot[m]	<h4sh3d> The current architecture is the same as presented in the CCS proposal and nothing tells us to change it for now.
+2020-11-18 17:21:38	z-bot[m]	<zkao> my take is that we should discuss more on the terminology, because i was finding very hard to understand many things, especially the proposed UX centric approach of the external API design
+2020-11-18 17:22:18	z-bot[m]	<zkao> or rather, relate to that approach, but the names were more daemon-centric, than client-centric
+2020-11-18 17:22:47	z-bot[m]	<h4sh3d> I think it's because the component that interact with all other components is the daemon
+2020-11-18 17:23:22	z-bot[m]	<h4sh3d> And the swap, despite the fact that it's piloted by a client, is executed inside the daemon
+2020-11-18 17:24:16	z-bot[m]	<h4sh3d> But yes, names can change
+2020-11-18 17:24:42	z-bot[m]	<zkao> @**lederstrumpf**  is the one that had strong sentiments on the UX-centric design
+2020-11-18 17:24:58	z-bot[m]	<h4sh3d> it's also true that I reason with a daemon-centric approach
+2020-11-18 17:25:01	z-bot[m]	<lederstrumpf> sure, but that does not dictate naming
+2020-11-18 17:25:02	z-bot[m]	<zkao> I think there is something fucked with regards to zulip bridge
+2020-11-18 17:25:29	z-bot[m]	<h4sh3d> LGTM, why?
+2020-11-18 17:25:58	z-bot[m]	<zkao> @**TheCharlatan** wrote there, and it never made it in zulip
+2020-11-18 17:26:10	z-bot[m]	<h4sh3d> Oh yes, I see
+2020-11-18 17:26:17	h4sh3d[m]	test
+2020-11-18 17:26:37	z-bot[m]	<zkao> it used to work
+2020-11-18 17:26:47	z-bot[m]	<zkao> will look into that later
+2020-11-18 17:27:21	z-bot[m]	<lederstrumpf> anyway: being UX centric does not dictate naming
+2020-11-18 17:27:55	z-bot[m]	<h4sh3d> ok. so we agree that the name can be better than now, but does not need to be ux centric
+2020-11-18 17:28:04	z-bot[m]	<zkao> ack
+2020-11-18 17:28:08	z-bot[m]	<lederstrumpf> ack
+2020-11-18 17:28:37	z-bot[m]	<h4sh3d> On thing that has been discuss here in the past days is the recovery mechanism
+2020-11-18 17:29:13	z-bot[m]	<h4sh3d> We have started another RFC about the "jobs", the stuff sent by the daemon to a syncer to execute some specific work
+2020-11-18 17:30:24	z-bot[m]	<h4sh3d> What we describe in the job and architecture RFCs is that the outputs of the daemon MUST be replayable without side effect, thus allowing a recovery process for a previous saved state.
+2020-11-18 17:31:41	z-bot[m]	<h4sh3d> Maybe I can talk quickly about daemon outputs
+2020-11-18 17:31:43	z-bot[m]	<zkao> in practice that is crazy hard to achieve, but, yeah, i like to code this kind of stuff
+2020-11-18 17:32:02	z-bot[m]	<h4sh3d> ^ yes :)
+2020-11-18 17:32:34	z-bot[m]	<h4sh3d> I've tried to think about the "state transition" for the swap
+2020-11-18 17:32:51	z-bot[m]	<h4sh3d> I've started something here: https://github.com/h4sh3d/RFCs/blob/swap-state/swap-state.mediawiki
+2020-11-18 17:33:52	z-bot[m]	<h4sh3d> My idea is the following: the daemon will receive inputs, from different sources.
+2020-11-18 17:34:21	z-bot[m]	<h4sh3d> Client, syncers, counter-party daemon, and maybe other (e.g. from itself)
+2020-11-18 17:34:58	z-bot[m]	<h4sh3d> We have a start state, and a transition is applying one input on that state.
+2020-11-18 17:36:22	z-bot[m]	<h4sh3d> so a transition is the tuple `(state, input)`, and there is some specific computation that must be done for that specific tuple
+2020-11-18 17:37:15	z-bot[m]	<h4sh3d> e.g. `(state: start, input: client_key_initialized)`
+2020-11-18 17:37:53	 *	z-bot[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/MzclwllYjwDbeUPUtItnLFmb/message.txt >
+2020-11-18 17:38:45	z-bot[m]	<h4sh3d> Yep. And a state can take multiple inputs, but only one at once. So order matters
+2020-11-18 17:38:54	z-bot[m]	<h4sh3d> Example
+2020-11-18 17:39:16	z-bot[m]	<h4sh3d> If state `A` can take inputs `I1` or `I2`
+2020-11-18 17:39:43	z-bot[m]	<h4sh3d> and `(A, I1) -> A1` and `(A,I2) -> A2`
+2020-11-18 17:40:18	z-bot[m]	<h4sh3d> but `A1` cannot take `I2` as input, if you take one path you cannot go back
+2020-11-18 17:40:41	z-bot[m]	<lederstrumpf> well, sometimes it will be valid
+2020-11-18 17:40:46	z-bot[m]	<zkao> Yep, that is handled by liner types in rust
+2020-11-18 17:40:57	z-bot[m]	<lederstrumpf> that's gonna be a design decision
+2020-11-18 17:41:16	z-bot[m]	<h4sh3d> So, if we can represent all the state and all there possible input, we can create the recipe for the swap.
+2020-11-18 17:42:10	z-bot[m]	<zkao> Sorry, but this is why I want to use petrinets for the runtime, so that we dont have to mess up with these things
+2020-11-18 17:42:30	z-bot[m]	<lederstrumpf> some transitions will commute, others won't
+2020-11-18 17:42:33	z-bot[m]	<h4sh3d> In some cases we want `((A, I1), I2)` to be possible, in other we dont
+2020-11-18 17:42:56	z-bot[m]	<h4sh3d> Yes, petrinet is a good tool for that
+2020-11-18 17:42:57	z-bot[m]	<lederstrumpf> we can encode that in a petrinet
+2020-11-18 17:43:27	z-bot[m]	<lederstrumpf> ok, seems like we agree ^^
+2020-11-18 17:43:48	z-bot[m]	<h4sh3d> Now, each of these transition will produce outputs
+2020-11-18 17:44:10	z-bot[m]	<zkao> when u say outputs, do u mean side effects, by any chance?
+2020-11-18 17:44:20	z-bot[m]	<h4sh3d> those outputs will be directed to syncers, client, and daemon
+2020-11-18 17:44:42	z-bot[m]	<zkao> ok, that means side effects
+2020-11-18 17:45:02	z-bot[m]	<h4sh3d> by output I mean: jobs, action request (in the current RFC arch diagram), etc.
+2020-11-18 17:45:15	z-bot[m]	<h4sh3d> so yes, those will produce side effects
+2020-11-18 17:45:19	z-bot[m]	<h4sh3d> BUT
+2020-11-18 17:45:37	z-bot[m]	<h4sh3d> we should make sure that all those outputs can be replayed safely
+2020-11-18 17:45:53	z-bot[m]	<h4sh3d> And then we have a recovery mechanism
+2020-11-18 17:46:33	z-bot[m]	<zkao> Im not totally sure about the playing safely meaning -- is it because we lost state that we have to replay safely?
+2020-11-18 17:46:43	z-bot[m]	<h4sh3d> Because you can restart from a previous state and apply daemon inputs, producing daemon outputs, that reproduce the following daemon inputs, etc.
+2020-11-18 17:48:04	z-bot[m]	<h4sh3d> Yes, exactly. For example, if we saved on disk state `Ax`, and we started applying `Ix` on it, the computation starts and produce a job for the btc syncer: broadcast tx `Z`, and then it crashes before the new save on disk
+2020-11-18 17:49:14	z-bot[m]	<h4sh3d> When we restart the daemon with state `Ax` we will redo the broadcast job `Z`, and it must not be a problem
+2020-11-18 17:50:42	z-bot[m]	<h4sh3d> This is the basic idea about driving the swap, within a model that allow us to describe all the action the syncers, client, daemon must do, and how to recover from a crash. But this is an idea
+2020-11-18 17:51:23	z-bot[m]	<zkao> So i guess i get it: daemon submits a job to syncer, and is waiting for a result from the syncer, but daemon crashes after syncer publishes tx to blockchain
+2020-11-18 17:51:39	z-bot[m]	<zkao> * i meant before
+2020-11-18 17:51:48	z-bot[m]	<h4sh3d> yes
+2020-11-18 17:52:44	z-bot[m]	<zkao> but for me the state is AWAITING_CONFIRMATION
+2020-11-18 17:52:44	z-bot[m]	<h4sh3d> And there is still some missing parts:
+2020-11-18 17:52:44	z-bot[m]	You saved state `Ax`, you receive `Ix` and you crash, you restart with `Ax`. But to continue you should receives `Ix`... but, e.g., syncer already send it, how do you get it again?
+2020-11-18 17:53:51	z-bot[m]	<h4sh3d> Either you saved it at reception, or at each state you have a series of default outputs to do
+2020-11-18 17:53:56	z-bot[m]	<h4sh3d> I prefer the second one
+2020-11-18 17:54:18	z-bot[m]	<h4sh3d> the state of what is AWAITING
+2020-11-18 17:55:14	z-bot[m]	<zkao> im just afraid youre trying to reinvent very well established methods of doing this
+2020-11-18 17:56:27	z-bot[m]	<zkao> all these wrapped structures like result futures options, they all do these kind of thing
+2020-11-18 17:56:28	z-bot[m]	<h4sh3d> I think I'm explaining something I do have the right name already
+2020-11-18 17:57:11	z-bot[m]	<zkao> and the way you discretize state is not obvious
+2020-11-18 17:57:33	z-bot[m]	<h4sh3d> No, I think it's at a different level, here I want to represent what are the actions possible from a protocol point of view. And we should not think about it as a linear thing
+2020-11-18 17:57:34	z-bot[m]	<zkao> guys, it s 17:00, we should wrap up
+2020-11-18 17:58:45	z-bot[m]	<h4sh3d> Next actions:
+2020-11-18 17:58:45	z-bot[m]	discussing more about the names
+2020-11-18 17:58:45	z-bot[m]	think about how we should represent the swap protocol, in a way we can code
+2020-11-18 17:58:52	z-bot[m]	<h4sh3d> what else?
+2020-11-18 17:59:14	z-bot[m]	<zkao> we bought farcaster.dev domain name, possibly we could use community help to do something there
+2020-11-18 17:59:14	z-bot[m]	community help wouldnt hurt for a logo as well
+2020-11-18 17:59:46	z-bot[m]	<h4sh3d> a website pointing to the github, the zulip and other resources would be great
+2020-11-18 17:59:59	z-bot[m]	<h4sh3d> +1 for a logo
+2020-11-18 18:00:32	z-bot[m]	<zkao> we keep async communicating on the architecture topic, cheers
+2020-11-18 18:00:42	z-bot[m]	<h4sh3d> cheers
+2020-11-18 18:00:43	z-bot[m]	<lederstrumpf> ciao, thanks for the meeting
+2020-11-18 18:09:16	zkao	.
