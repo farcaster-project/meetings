@@ -1,0 +1,144 @@
+2020-11-25 17:02:02	z-bot[m]	<Kayaba> :wave:
+2020-11-25 17:02:19	z-bot[m]	<lederstrumpf> :wave:
+2020-11-25 17:02:51	zkao	hello
+2020-11-25 17:03:59	z-bot[m]	<zkao> so @**h4sh3d** will be a few minutes late
+2020-11-25 17:04:26	z-bot[m]	<zkao> but we can get started with what we've been doing in the past week
+2020-11-25 17:05:22	z-bot[m]	<zkao> following our discussion on orchestrating the prtocol, we improved some ideas about protocol execution
+2020-11-25 17:05:25	z-bot[m]	<h4sh3d> hi!
+2020-11-25 17:08:14	z-bot[m]	<h4sh3d> I worked offline for now on the use case RFC, defining a bit better what the UI can look like.
+2020-11-25 17:08:44	z-bot[m]	<h4sh3d> I also worked a bit on the jobs RFC: https://github.com/farcaster-project/RFCs/blob/hackmd/jobs.md
+2020-11-25 17:09:15	z-bot[m]	<zkao> nice, that is new, have to read it
+2020-11-25 17:09:20	z-bot[m]	<h4sh3d> this describe the messages (API) exchanged between the daemon and the syncers
+2020-11-25 17:09:43	z-bot[m]	<h4sh3d> I'm happy to get feedback on that one in the following days
+2020-11-25 17:10:02	z-bot[m]	<h4sh3d> For the use case I plan to have it published on Friday
+2020-11-25 17:10:20	z-bot[m]	<Kayaba> I've been keeping an eye on things, yet have yet to directly contribute. I did have a few questions about the way the RFCs are going though, mainly:
+2020-11-25 17:10:20	z-bot[m]	- Why would the RFC need to define a loopback message? I fully understand why a daemon would keep a queue of active jobs, as necessary. My question is why we define it as a message in the RFC itself. Shouldn't it be an implementation detail?
+2020-11-25 17:10:20	z-bot[m]	- What do you all think about standardizing jobs? Obviously, watching a BTC TX is different from a XMR TX, I know. The existing job definition notes the arguments each coin needs. That said, if we want to try to create a more cohesive ecosystem, the RFCs themselves can define a `watch` job (with each coin defining arguments), just as we already have a `publish` job.
+2020-11-25 17:12:01	z-bot[m]	<h4sh3d> For the first question: I defined it as a message because it's part of the swap state.
+2020-11-25 17:12:28	z-bot[m]	<Kayaba> *So yes, I am basing my latter question off the that markdown. I actually really support it so far. My Q is should every type of job be defined by the core RFCs, in order to not risk a XMPP situation where everyone writes their own extensions leading to fragmentation. Even with manually defining jobs, there can be argument fragmentation on a per-coin level, but I don't see that as too much of a problem.
+2020-11-25 17:12:33	z-bot[m]	<h4sh3d> I started explaining my thoughts on that in the State chapter of the Architectue RFC: https://github.com/farcaster-project/RFCs/blob/hackmd/architecture.md#swap-state
+2020-11-25 17:12:38	z-bot[m]	<zkao> i do agree the loopback is an implementation detail and it probably isnt a message, its just function calls btw different parts of the daemon
+2020-11-25 17:12:54	z-bot[m]	<Kayaba> Thanks for clarifying, h4sh3d :)
+2020-11-25 17:14:41	z-bot[m]	<h4sh3d> loopback is a wierd one yes, it's not part of the daemon's API, as it's internal, but it matters for what needs to be saved on disk in case of recovery. Is it a message, I don't know. What I know is that it's part of the state as the other daemon input messages
+2020-11-25 17:15:21	z-bot[m]	<Kayaba> And sorry for starting the meeting with the large questions. Just wanted to make sure I asked them. Happy to wait for longer discussions on the second question after everyone comments what they've been up to, which I think is how @**zkao** wanted to start this.
+2020-11-25 17:15:27	z-bot[m]	<h4sh3d> For your second Q kayaba: it's a good question. I didn't think about that. If it makes more sense to have one watch then we change.
+2020-11-25 17:16:22	z-bot[m]	<h4sh3d> ok :)
+2020-11-25 17:16:22	z-bot[m]	@**zkao** do you want to continue on questions or move on and discuss that latter?
+2020-11-25 17:16:33	z-bot[m]	<zkao> nope
+2020-11-25 17:17:01	z-bot[m]	<zkao> I do think we have to discuss a lot about trying to standarlize stuff
+2020-11-25 17:17:20	z-bot[m]	<lederstrumpf> kayaba, I also don't think framing the intra-daemon communication as "messages" is necessary. As h4sh3d mentioned, if we want to replay the state in a recovery purely from messages, then these need to be included as "messages". If it turns out that we can't do this, I'd ultimately drop loopback messages from the spec.
+2020-11-25 17:17:27	z-bot[m]	<zkao> because this project is about interoperability
+2020-11-25 17:19:26	z-bot[m]	<Kayaba> @**lederstrumpf** If the daemon is reloading a state, I don't know why that wouldn't be completely internal. I agree we need to standardize required features, and external routes, yet the daemon reloading a state from disk shouldn't be required to be based on messages IMO; just be able to output the relevant messages if needed by something it's communicating with.
+2020-11-25 17:20:04	z-bot[m]	<Kayaba> And then if a client is recreating a state with a different daemon instance, it doesn't have access to the loopback messages.
+2020-11-25 17:21:00	z-bot[m]	<zkao> we're on the exploration phase, and we r trying to create a language to understand each other currently. i guess i agree with you, but i know everything  will change anyway! haha
+2020-11-25 17:21:05	z-bot[m]	<h4sh3d> I see, for me that part was not exclusively about interoperability, but also to reason about the swap and help architecturing the code latter
+2020-11-25 17:21:38	z-bot[m]	<zkao> sorry, i meant interoperability in regards to topic 2 of @**Kayaba**'s initial message
+2020-11-25 17:22:04	z-bot[m]	<zkao> namely
+2020-11-25 17:22:04	z-bot[m]	> What do you all think about standardizing jobs? Obviously, watching a BTC TX is different from a XMR TX, I know. The existing job definition notes the arguments each coin needs. That said, if we want to try to create a more cohesive ecosystem, the RFCs themselves can define a watch job (with each coin defining arguments), just as we already have a publish job.
+2020-11-25 17:23:22	z-bot[m]	<lederstrumpf> > And then if a client is recreating a state with a different daemon instance, it doesn't have access to the loopback messages.
+2020-11-25 17:23:22	z-bot[m]	This is true, but neither will it have access to the inter-daemon messages nor the syncer<->daemon messages: the client only has access to client<->daemon communication.
+2020-11-25 17:24:07	 *	z-bot[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/JnGgTWxEWCuLtohhfjwpkoCL/message.txt >
+2020-11-25 17:24:07	z-bot[m]	<lederstrumpf> only the daemon has access to all messages (on one side of the swap) since it's the centrepiece for all communication.
+2020-11-25 17:25:52	z-bot[m]	<Kayaba> Yep. I was more thinking of daemon reconnecting. If a daemon crashes, and you need to recover your swap (hopefully successfully since daemons support disconnects/reconnects with the other party), it may make sense for clients to implement a way to just quickly publish its own copy of the swap state messages to rebuild it on the daemon side. That said, proper recovery would be the daemon rebooting, and it should
+2020-11-25 17:25:52	z-bot[m]	never crash in the first place. I was trying to note how loopback messages are in this weird middle ground.
+2020-11-25 17:26:55	z-bot[m]	<Kayaba> Anyways. Been talking a lot. Definitely going to tone it down, sorry about that. Last thing I wanted to say is @**h4sh3d** noted protocol using the RFCs not only for the protocol yet also for designing code. Would it make sense to explicitly separate the two/define recommended implementation practices?
+2020-11-25 17:27:40	z-bot[m]	<zkao> i think you're raising very relevant questions, @**Kayaba**
+2020-11-25 17:27:58	z-bot[m]	<h4sh3d> I think it makes sense to separate what is for interoperability and what is farcaster project
+2020-11-25 17:28:07	z-bot[m]	<h4sh3d> yes very relevant, thanks
+2020-11-25 17:28:48	z-bot[m]	<zkao> @**Kayaba** what do you think about the general segregation of the 3 components?
+2020-11-25 17:28:59	z-bot[m]	<zkao> Client Daemon Syncer
+2020-11-25 17:29:13	z-bot[m]	<zkao> it was based on requirements:
+2020-11-25 17:29:24	z-bot[m]	<zkao> client has access to secret keys
+2020-11-25 17:30:00	z-bot[m]	<zkao> remote syncers can be used by light wallets
+2020-11-25 17:30:03	z-bot[m]	<zkao> etc
+2020-11-25 17:30:17	z-bot[m]	<Kayaba> I think it makes a lot of sense. You have an SPV client which solely watches the chain, a daemon managing the logic and communicating in its own way, and then the actual wallet. Definitely something I like
+2020-11-25 17:30:30	z-bot[m]	<zkao> light-wallet -- no full node
+2020-11-25 17:31:36	z-bot[m]	<zkao> i dislike the amount of loops the current RFCs have, because it gets very overwhelming to analyse
+2020-11-25 17:31:52	z-bot[m]	<zkao> * the current interaction of the components have
+2020-11-25 17:32:04	z-bot[m]	<Kayaba> Of course, not just a SPV client. BTCd would also work. Just noting on a practical level, people will use light clients. I am curious how it'll end up when they're deployed as libraries instead of microservices (as the docs kinda assume they are by the communication ideology).
+2020-11-25 17:33:03	z-bot[m]	<zkao> my take is library first priority, microservice second
+2020-11-25 17:33:04	z-bot[m]	<Kayaba> That said, while a single executable breaks down the security of key separation, I do really appreciate the design allows it if deployed as microservices :) More a thought then something I want to propose working on.
+2020-11-25 17:33:41	z-bot[m]	<Kayaba> Yep. I will note that daemon <-> syncer has a good chance though. A lot of parties may rely on Electrum instead of shipping their own SPV impl.
+2020-11-25 17:33:52	z-bot[m]	<zkao> and a lot of these loopback on the daemon (my understanding) is just two daemon libs talking to each other
+2020-11-25 17:33:57	 *	z-bot[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/bACtgSCSiQrSsqhOrzcdBxyz/message.txt >
+2020-11-25 17:34:19	z-bot[m]	<h4sh3d> yes, we can wrap everything into one binary, two (client+daemon/syncer), three... it a good option to have
+2020-11-25 17:34:30	z-bot[m]	<Kayaba> *Where of course, the diagram is representative of the protocol
+2020-11-25 17:34:35	z-bot[m]	<zkao> especially for deving
+2020-11-25 17:35:12	z-bot[m]	<zkao> the important point for me: the message passing interaction btw components suggests an event driven architecture
+2020-11-25 17:35:41	z-bot[m]	<zkao> even if we initally build a big binary, internally it should still be an event driven system
+2020-11-25 17:35:56	z-bot[m]	<zkao> totally asynchronous
+2020-11-25 17:36:18	z-bot[m]	<h4sh3d> and for that Rust is not a bad choice!
+2020-11-25 17:36:28	z-bot[m]	<zkao> that im not sure
+2020-11-25 17:36:47	z-bot[m]	<h4sh3d> we talk a bit about framework like actix, I see a good fit for that
+2020-11-25 17:37:04	z-bot[m]	<zkao> i read a bit about it, and trully dislike it
+2020-11-25 17:37:17	z-bot[m]	<Kayaba> While I agree about making it event driven, it is important to think about how any single swap will likely want to sequentially execute jobs (just so it can purely use await and not track futures as futures).
+2020-11-25 17:37:25	z-bot[m]	<Kayaba> Isn't tokio where the majority is?
+2020-11-25 17:38:38	z-bot[m]	<zkao> im not sure we're yet ready to decide what specific libraries to use for these, but i think tokio will be at the heart any of these async libs
+2020-11-25 17:38:56	z-bot[m]	<h4sh3d> for async await, the executor is tokio mainly yes.
+2020-11-25 17:39:20	z-bot[m]	<zkao> reactive functional programing is a better model than actor-based, as far as correctness is concerned
+2020-11-25 17:40:06	z-bot[m]	<Kayaba> It may be helpful to look over asmr? It's obviously no where near Farcaster but it is a Rust impl taking generics to heart
+2020-11-25 17:40:23	z-bot[m]	<h4sh3d> @**Kayaba** the jobs will probably be pretty sequential, but you can have client interaction (start cancelling the swap), counter-party daemon, self-daemon (timer), syncers (blockchain events) that makes it less sequential
+2020-11-25 17:41:48	z-bot[m]	<Kayaba> @**h4sh3d** When you're only dealing with a single swap at a time, the only non-sequential event should be an end-user driven cancel AFAICT. It'll look for a TX, find it, ask for the latest swap info from the counterparty, succeed/fail, move on...
+2020-11-25 17:42:01	z-bot[m]	<h4sh3d> Yes asmr is very good for being blockchain agnostic, and I really like the names for "Alice" and "Bob" roles with Unscripted and Scripted chains
+2020-11-25 17:42:02	z-bot[m]	<zkao> @**Kayaba** Im trying to orchestrate the protocol as a petrinet, i can show you some stuff later
+2020-11-25 17:42:29	z-bot[m]	<zkao> its a great mathematical description for concurrency
+2020-11-25 17:42:40	z-bot[m]	<Kayaba> Because yes, the daemon as a whole will need to be very event driven. I'm referring to a singular swap to think of making a clean implementation ;) A design which is meant with ease of development in mind...
+2020-11-25 17:43:09	z-bot[m]	<h4sh3d> @**Kayaba** yes, but it can come from your client or from the counterparty detected on-chain
+2020-11-25 17:44:23	z-bot[m]	<zkao> @**Kayaba** implement Syncer<B, A> Syncer<A,B> trait, Client<T> trait and Daemon<T> trait and u r done
+2020-11-25 17:44:28	z-bot[m]	<Kayaba> I considered counterparty cancellation as a failure leading to recovery :P The Future still resolves, without being cancelled/replaced/running at the same time as another future in the same swap. It just resolves as an error.
+2020-11-25 17:44:32	z-bot[m]	<h4sh3d> and the rest can be forced to be sequential or not (who sends the first messages in the initialization phase: Alice or Bob?)
+2020-11-25 17:45:23	 *	z-bot[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/ezIZFzJKfnHGJYjuBlDzidxT/message.txt >
+2020-11-25 17:45:24	z-bot[m]	<h4sh3d> Ok, that's a way to deal with it
+2020-11-25 17:45:35	z-bot[m]	<h4sh3d> hahaha
+2020-11-25 17:45:52	z-bot[m]	<zkao> @**Kayaba** please go ahead do it
+2020-11-25 17:46:01	z-bot[m]	<zkao> i make sure sure it gets merged
+2020-11-25 17:46:02	z-bot[m]	<zkao> haha
+2020-11-25 17:46:22	z-bot[m]	<zkao> if u can derive all the rest from preimplemented traits
+2020-11-25 17:46:24	z-bot[m]	<h4sh3d> Rust `unsafe` resolve everything :)
+2020-11-25 17:46:25	z-bot[m]	<Kayaba> Considering we already have to handle cancellation from our user, we'll still have future management @**h4sh3d**. We can see when the time comes :) Appreciate the discussion now though
+2020-11-25 17:47:38	z-bot[m]	<h4sh3d> Yes me too. I'm currently trying to not link my reflexion on any specific way of implementing it (it has pros and cons)
+2020-11-25 17:48:13	z-bot[m]	<h4sh3d> So, what's next
+2020-11-25 17:49:18	z-bot[m]	<zkao> @**Kayaba** do u really think its that hard to generalize a syncer's trait?
+2020-11-25 17:49:31	z-bot[m]	<zkao> havent u done something like that on asmr?
+2020-11-25 17:49:48	z-bot[m]	<Kayaba> It was 100% a joke :P asmr is fully generic
+2020-11-25 17:49:59	z-bot[m]	<zkao> ok
+2020-11-25 17:51:28	z-bot[m]	<Kayaba> I do have one other question
+2020-11-25 17:51:41	z-bot[m]	<zkao> @**Kayaba** could u please review @**h4sh3d** work on the jobs?
+2020-11-25 17:51:47	z-bot[m]	<zkao> RFC
+2020-11-25 17:52:23	z-bot[m]	<Kayaba> Sure. Was also planning on writing up what making everything `common` would look like, just so we can see the option in front of us.
+2020-11-25 17:53:10	z-bot[m]	<zkao> what is ur question @**Kayaba** ?
+2020-11-25 17:53:42	 *	z-bot[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/bhtUkpyMoghWtVoNZHGFQfYZ/message.txt >
+2020-11-25 17:54:36	z-bot[m]	<zkao> you thought of these better than anyone else, im sure :D
+2020-11-25 17:54:59	z-bot[m]	<Kayaba> As in, creating a single wallet for each coin and using that as a client, solely carrying a destination address along the way. It gives the daemon control though because it'd need to provide the TX which needs to be signed
+2020-11-25 17:55:09	z-bot[m]	<lederstrumpf> > Client<A> instead of Client<A, B>
+2020-11-25 17:55:09	z-bot[m]	Depends on how dumb the client will be
+2020-11-25 17:55:19	z-bot[m]	<Kayaba> Which allows arbitrary signing, yet we already assume the daemon is trusted?
+2020-11-25 17:55:25	z-bot[m]	<lederstrumpf> or rather: how little they can safely know
+2020-11-25 17:56:01	z-bot[m]	<lederstrumpf> for now, we assume the daemon is fully trusted
+2020-11-25 17:56:16	z-bot[m]	<Kayaba> Yeah. It would be nicer if we could do XmrWallet instead of Client(XmrWallet, BtcWallet). That said, it does move the daemon to verifying the B side's data AND providing the final TX for the private key to sign to claim the funds.
+2020-11-25 17:56:18	z-bot[m]	<zkao> So you'd have a Client<Bitcoin> that can do bitcoin monero and bitcoin litecoin swaps?
+2020-11-25 17:56:29	z-bot[m]	<lederstrumpf> yes
+2020-11-25 17:56:30	z-bot[m]	<Kayaba> It really just splits the client into client/daemon. Doesn't work out.
+2020-11-25 17:56:49	z-bot[m]	<Kayaba> Right, with the Daemon being instantiated with both and picking up the pieces. That's why it doesn't work out.
+2020-11-25 17:57:12	z-bot[m]	<Kayaba> It's still somewhat interesting? May provide some good idea on implementation? But I think it puts too much trust on the daemon
+2020-11-25 17:57:20	z-bot[m]	<zkao> I think we can have generics, and specific implementations of generics that fix one of the type parameters
+2020-11-25 17:57:36	z-bot[m]	<zkao> say Client<Bitcoin,T>
+2020-11-25 17:57:43	z-bot[m]	<Kayaba> Because it is already trustless, but it does say, in the end, the daemon provides arbitrary data to be signed, and in that case, we may as well give it the private key.
+2020-11-25 17:57:44	z-bot[m]	<Kayaba> Agreed.
+2020-11-25 17:58:18	z-bot[m]	<Kayaba> I was going to ask about it before I thought it over a bit more :P Explained it here more to note it than anything else.
+2020-11-25 17:58:24	z-bot[m]	<zkao> the daemon is fully trusted at the moment, so dont feel shy to feed in new ideas
+2020-11-25 17:58:31	z-bot[m]	<Kayaba> Thank you :)
+2020-11-25 17:59:37	z-bot[m]	<zkao> to a good extend, this is a trial and error process, but please no errors hahaha
+2020-11-25 17:59:45	z-bot[m]	<h4sh3d> Agree that in that case the private keys can be moved into the daemon (if that's what you're saying), the segregation is to allow more types of client, and maybe some where you don't have access to the keys
+2020-11-25 18:00:21	z-bot[m]	<h4sh3d> but both are fully trusted piece of software from the user perspective
+2020-11-25 18:00:37	z-bot[m]	<h4sh3d> and I think it's reasonable, but feel free to comment on it
+2020-11-25 18:00:39	z-bot[m]	<zkao> hmm, letting the daemon know about private keys directly will create future problems
+2020-11-25 18:01:10	z-bot[m]	<Kayaba> Right, in this theoretical, we may as well move private keys to the daemon. That's why I said it doesn't work out, and I solely thought it was interesting and something I wanted to note, nothing more.
+2020-11-25 18:01:14	z-bot[m]	<h4sh3d> (and the daemon communicates with the counterparty, meaning the principal attack target)
+2020-11-25 18:01:33	 *	z-bot[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/IqVvAeVywiGbnRswRVzNwpgT/message.txt >
+2020-11-25 18:01:33	z-bot[m]	<zkao> shall we wrap up, now should be the MRL meeting
+2020-11-25 18:01:49	z-bot[m]	<zkao> at #monero-research-lab
+2020-11-25 18:01:57	z-bot[m]	<lederstrumpf> ye
+2020-11-25 18:02:11	z-bot[m]	<h4sh3d> yes, thanks everyone. feel free to come here chilling around :)
+2020-11-25 18:04:12	z-bot[m]	<Kayaba> Very happy to have been here! Really happy with where the project is going in the future
+2020-11-25 18:05:58	z-bot[m]	<lederstrumpf> cheers!
