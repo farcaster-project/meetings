@@ -1,0 +1,39 @@
+Sep 22 14:10:47 <TheCharlatan>	I'm around, but will wait for what I am guessing is lunchtime ;)
+Sep 22 14:54:11 <Guest6205>	yep
+Sep 22 14:54:14 <Guest6205>	;)
+Sep 22 14:55:43 <Guest6205>	I'm currently working on the key manager
+Sep 22 14:55:38 *	You are now known as h4sh3d
+Sep 22 14:55:58 *	ChanServ gives channel operator status to h4sh3d
+Sep 22 14:56:44 <h4sh3d>	adding more tests and finishing the secret recovery
+Sep 22 14:57:32 <h4sh3d>	this part was left unimplemented until now, doing it today (and thanks kayabaNerve for the heads-up about endianess)
+Sep 22 14:58:05 <h4sh3d>	gonna push my tests in a draft for visibility
+Sep 22 15:01:40 *	mongojuice_ (~mongojuic@user/mongojuice) has joined
+Sep 22 15:05:04 *	mongojuice has quit (Ping timeout: 252 seconds)
+Sep 22 15:10:11 <TheCharlatan>	r.e. https://github.com/farcaster-project/farcaster-node/pull/110#issuecomment-924902379, are Mainnet, Testnet, Local enough options? After all there is Signet, Testnet, Stagenet, Regtest, and possibly many more nuances.
+Sep 22 15:12:43 <h4sh3d>	Do we need all these nuances? For me we should choose for each chain 1 local, 1 "testnet" and 1 "mainnet"
+Sep 22 15:12:51 <h4sh3d>	that was my idea
+Sep 22 15:13:01 <h4sh3d>	but maybe not enough
+Sep 22 15:16:16 *	mongojuice__ (~mongojuic@user/mongojuice) has joined
+Sep 22 16:16:57 *	Disconnected (Connection timed out)
+**** ENDING LOGGING AT Wed Sep 22 16:16:57 2021
+
+**** BEGIN LOGGING AT Wed Sep 22 16:17:08 2021
+
+Sep 22 16:16:38 *	Now talking on #monero-swap
+Sep 22 16:16:38 *	Topic for #monero-swap is: Bitcoin-Monero cross-chain atomic swaps research and development: https://github.com/farcaster-project
+Sep 22 16:16:38 *	Topic for #monero-swap set by zkao!~zkao@194.182.165.35 (Sun Jul 25 16:15:11 2021)
+Sep 22 15:40:36 <TheCharlatan>	I think we should be able to distinguish for sure. Testnet3 and Signet run different features for example, same for Testnet and Stagenet on monero.
+Sep 22 16:41:10 <h4sh3d>	Yes, but do we need to test with all of them?
+Sep 22 16:42:03 <h4sh3d>	Is there a good "generic" notation we can use to refer these nets, or do we need a specific list for each chain?
+Sep 22 16:42:24 <h4sh3d>	would be good to have one list that translate to all chains
+Sep 22 17:15:37 <zkao>	https://xkcd.com/927/
+Sep 22 17:19:43 <h4sh3d>	haha, exactly :p
+Sep 22 17:32:14 *	mongojuice_ (~mongojuic@user/mongojuice) has joined
+Sep 22 17:36:05 *	mongojuice__ has quit (Ping timeout: 264 seconds)
+Sep 22 17:39:09 *	mfoolb has quit (Ping timeout: 276 seconds)
+Sep 22 17:44:33 *	mfoolb (~mfoolb@gateway/tor-sasl/mfoolb) has joined
+Sep 22 18:02:56 <h4sh3d>	https://github.com/farcaster-project/farcaster-core/pull/139
+Sep 22 18:03:02 <h4sh3d>	ready to review and merge!
+Sep 22 18:03:24 <h4sh3d>	then I do a PR on node to include all the changes from this week (renaming and this)
+Sep 22 18:03:30 <h4sh3d>	afk now
+

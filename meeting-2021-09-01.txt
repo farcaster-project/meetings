@@ -1,0 +1,68 @@
+Sep 01 14:20:10 <h4sh3d>	Hi
+Sep 01 14:20:30 <h4sh3d>	meeting should happen now, anyone around?
+Sep 01 14:20:36 <h4sh3d>	ping zkao TheCharlatan lederstrumpf[m]
+Sep 01 14:20:51 <lederstrumpf[m]>	hi
+Sep 01 14:24:29 <h4sh3d>	i worked a bit on the community update this morning
+Sep 01 14:25:15 <h4sh3d>	i let you modify/add stuff for the first chapter, what you think about it
+Sep 01 14:26:44 <lederstrumpf[m]>	I like it - it's critical to get the tone right though
+Sep 01 14:27:08 <h4sh3d>	yes
+Sep 01 14:27:35 <h4sh3d>	and my lack of vocabulary makes it a difficult exercise for me
+Sep 01 14:27:18 <lederstrumpf[m]>	did you have in mind to quote reddit comments directly and respond to these, or address the topics generally?
+Sep 01 14:27:51 <h4sh3d>	i think general topics is better
+Sep 01 14:27:58 <lederstrumpf[m]>	yeah, me too
+Sep 01 14:28:36 <h4sh3d>	otherwise it may be perceived as attacks, which is really not the case
+Sep 01 14:29:03 <h4sh3d>	and I didn't read everything, so pointing to comments will be arbitrary
+Sep 01 14:31:07 <lederstrumpf[m]>	agreed
+Sep 01 14:31:33 <h4sh3d>	regarding code I work these days on taproot/slip10/keyManager: https://github.com/farcaster-project/farcaster-core/pull/126
+Sep 01 14:31:21 <lederstrumpf[m]>	I don't think one has to comment on everything
+Sep 01 14:32:38 <lederstrumpf[m]>	specifically the "if A exists, do we need B?" train is not too fruitful
+Sep 01 14:35:15 <h4sh3d>	that's a comment I saw on reddit, why do we continue focusing on... do you think it's better to remove that part?
+Sep 01 14:37:40 <h4sh3d>	I think it is a bit less formal without the subtitles
+Sep 01 14:38:00 <lederstrumpf[m]>	unless we rework that section a lot - I didn't find it very convincing. It's hard to not have that devolve into mudslinging, so if done, it should be done carefully. There's a need both for p2p and b2c software, and the design philosophies are also very different, as are the engineering approaches.
+Sep 01 14:38:56 <lederstrumpf[m]>	the main reason we're doing this isn't that "multiple implementations make sense" :P
+Sep 01 14:39:33 <lederstrumpf[m]>	h4sh3d: can also change them to "comments"
+Sep 01 14:40:15 <lederstrumpf[m]>	<h4sh3d> "regarding code I work these days..." <- cool! now I'll no longer have to justify a new direct dependency on `curve25519-dalek` :P
+Sep 01 14:42:45 <h4sh3d>	haha, if it's crypto dependency you can go, it's always justify :p
+Sep 01 14:43:38 <h4sh3d>	I'm fine dropping the last section regarding what you're saying
+Sep 01 14:43:54 <lederstrumpf[m]>	minor comment: you've removed comments on quite a few types (such as https://github.com/farcaster-project/farcaster-core/pull/126/files#diff-c563e0484ecae29b63fe4e259c9a784c8d4507b1537cb370295f52a8b58d43afL69-L99 and https://github.com/farcaster-project/farcaster-core/pull/126/files#diff-f6ea7f7876fb56e9b51c3c64bd71176ae249869594cbb6403ccf42f2a0ab906aL56-L62) that I'm not sure were intentional.
+Sep 01 14:47:35 <h4sh3d>	it is intentional, now when generating the doc when you implements a trait the doc comes from the trait itself
+Sep 01 14:47:53 <h4sh3d>	this was overriding with not always up-to-date comments
+Sep 01 14:49:40 <lederstrumpf[m]>	kk!
+Sep 01 14:49:59 <lederstrumpf[m]>	I've been working on DLEQ implementation
+Sep 01 14:50:04 <lederstrumpf[m]>	https://github.com/Lederstrumpf/farcaster-core/tree/dleq_implementation
+Sep 01 14:50:34 <lederstrumpf[m]>	ed25519 commitments work now - busy with secp256k1
+Sep 01 14:52:36 <h4sh3d>	nice, i'll have a look
+Sep 01 14:53:03 <h4sh3d>	regarding the last section, if was in my mind because of that: https://www.reddit.com/r/Monero/comments/pan8vk/the_point_of_farcaster/
+Sep 01 14:52:47 <lederstrumpf[m]>	I'm first implementing it strictly following the API implied by MRL-0010 to make an initial review more effective/efficient, and will only align with our own API after that first review
+Sep 01 14:53:17 <h4sh3d>	but looking at the comments and votes we can drop in our update IMO
+Sep 01 14:53:06 <lederstrumpf[m]>	i.e. this is the outermost layer atm: https://github.com/Lederstrumpf/farcaster-core/blob/dleq_implementation/src/swap/dleq.rs#L134-L147
+Sep 01 14:56:39 <h4sh3d>	cool
+Sep 01 14:56:44 <zkao>	hey
+Sep 01 14:57:18 <h4sh3d>	I added a slip10 module in the crypto module, IMO you can add the dleq under crypto too if it make sens for you
+Sep 01 14:58:45 <lederstrumpf[m]>	yup - I agree it should go there - will move it
+Sep 01 14:59:52 <h4sh3d>	zkao: I saw that new releases for strict encoding/internet2/... are out since yesterday.  any need/plan to update those?
+Sep 01 15:00:10 <zkao>	i havent seen, h4sh3d, thank you for pinging me
+Sep 01 15:00:46 <zkao>	i wont touch the strict encoding stuff, but will happily use the internet2, since we're using my own branch now
+Sep 01 15:00:48 <lederstrumpf[m]>	<h4sh3d> "regarding the last section, if..." <- I see - I wouldn't give it more credit that it's due, and I don't think that's any ;)
+Sep 01 15:01:46 <h4sh3d>	ah, internet2 was not part of it yet, sorry for missinforming
+Sep 01 15:02:10 <h4sh3d>	lederstrumpf[m]: agree
+Sep 01 15:02:56 <h4sh3d>	inet2_addr had a release, that's why
+Sep 01 15:04:06 <zkao>	hmm, this is more like a FAQ, not an dev update
+Sep 01 15:05:36 <h4sh3d>	the first part, yes kind of.  you think it is superfluous?
+Sep 01 15:05:33 <zkao>	no, but has to be the last part, after the dev update
+Sep 01 15:05:56 <zkao>	but i feel it can be misinterpred if not carefully drafted, as always happens
+Sep 01 15:07:31 <zkao>	the happy alice maker path is 90% completed using our architecture with no mocking at all -- i'd prefer to work on that now, just ping me if needed
+Sep 01 15:07:52 <zkao>	meaning, using the syncer + swapd + walletd + farcasterd
+Sep 01 15:08:26 <h4sh3d>	\O/ yeah
+Sep 01 15:08:12 <lederstrumpf[m]>	nice!
+Sep 01 15:08:24 <lederstrumpf[m]>	yeah, then go ahead with that rather :)
+Sep 01 15:11:16 <lederstrumpf[m]>	I'd also rather return to work ^^
+Sep 01 15:11:26 <lederstrumpf[m]>	h4sh3d: when should we push the community update?
+Sep 01 15:13:27 <lederstrumpf[m]>	i.e. do you want to do it tonight?
+Sep 01 15:15:27 <h4sh3d>	no, I think it should be done before the week end
+Sep 01 15:15:47 <h4sh3d>	you all have time to change/add/delete stuff in there
+Sep 01 15:16:01 <h4sh3d>	IMO friday is ok
+Sep 01 15:15:47 <lederstrumpf[m]>	ok
+Sep 01 15:17:12 <lederstrumpf[m]>	perfect - that works well for me
+Sep 01 15:17:14 <lederstrumpf[m]>	then let's adjourn :)
+Sep 01 15:18:10 <h4sh3d>	yep, thanks for attending

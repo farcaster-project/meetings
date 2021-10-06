@@ -1,0 +1,112 @@
+Jul 21 13:41:13 <h4sh3d>	meeting in 20 minutes
+Jul 21 13:58:09 <zkao>	hey
+Jul 21 13:59:17 <h4sh3d>	hi
+Jul 21 14:00:04 <Inge>	o/`
+Jul 21 14:01:51 <h4sh3d>	i think lederstrumpf[m] will not make it today.  let's wait on others to join
+Jul 21 14:07:54 <h4sh3d>	ok, let's start.  welcome everyone
+Jul 21 14:07:47 <zkao>	i finished work on internet2 for integrating farcaster peer messages
+Jul 21 14:08:11 <h4sh3d>	great
+Jul 21 14:08:04 <zkao>	i.e., protocol messages = peer messages
+Jul 21 14:08:22 <zkao>	we need work on core 
+Jul 21 14:08:35 <zkao>	to get all i need working
+Jul 21 14:08:41 <zkao>	i open a few issues today
+Jul 21 14:08:56 <h4sh3d>	I have a question on https://github.com/farcaster-project/farcaster-core/issues/78
+Jul 21 14:09:02 <zkao>	no prejudgment
+Jul 21 14:09:12 <h4sh3d>	regarding the bitcoin:: needs
+Jul 21 14:09:05 <zkao>	just question
+Jul 21 14:09:44 <h4sh3d>	you need those two specific traits impl on SwapId?
+Jul 21 14:11:40 <zkao>	error[E0599]: the function or associated item `from_hex` exists for struct `SwapId`, but its trait bounds were not satisfied
+Jul 21 14:11:42 <zkao>	  --> src/swapd/opts.rs:37:41
+Jul 21 14:11:44 <zkao>	   |
+Jul 21 14:11:46 <zkao>	37 |       #[clap(parse(try_from_str = SwapId::from_hex))]
+Jul 21 14:11:48 <zkao>	   |                                           ^^^^^^^^ function or associated item cannot be called on `SwapId` due to unsatisfied trait bounds
+Jul 21 14:11:50 <zkao>	   | 
+Jul 21 14:11:52 <zkao>	  ::: /home/zkao/src/farcaster/core/src/swap.rs:11:1
+Jul 21 14:11:54 <zkao>	   |
+Jul 21 14:11:56 <zkao>	11 | / fixed_hash::construct_fixed_hash!(
+Jul 21 14:11:58 <zkao>	12 | |     /// A unique swap identifier represented as an 32 bytes hash.
+Jul 21 14:12:00 <zkao>	13 | |     pub struct SwapId(32);
+Jul 21 14:12:02 <zkao>	14 | | );
+Jul 21 14:12:04 <zkao>	   | |  -
+Jul 21 14:12:07 <zkao>	   | |  |
+Jul 21 14:12:08 <zkao>	   | |__doesn't satisfy `SwapId: FromHex`
+Jul 21 14:12:10 <zkao>	   |    doesn't satisfy `SwapId: bitcoin::bitcoin_hashes::Hash`
+Jul 21 14:12:13 <zkao>	   |
+Jul 21 14:13:21 <h4sh3d>	ok. there is also a SwapId::from_str("f79b29ccb233b37cea3aa35b94c5ece25c58a8098afc18f046810a3c04591599")
+Jul 21 14:13:36 <h4sh3d>	implementation that comes with fixed_hash
+Jul 21 14:13:53 <h4sh3d>	that may work too
+Jul 21 14:14:21 <zkao>	that does work too
+Jul 21 14:15:13 <h4sh3d>	cool, do you still want the two traits impl?
+Jul 21 14:15:20 <zkao>	nope, only if a new problem arises
+Jul 21 14:15:47 <h4sh3d>	ok, I let the issue open with a comment 'on hold'
+Jul 21 14:15:58 <h4sh3d>	working on the other issues
+Jul 21 14:15:50 <zkao>	close it
+Jul 21 14:16:04 <h4sh3d>	ok
+Jul 21 14:17:39 <h4sh3d>	on core I have a branch on my fork to prepare a release (soon TM) https://github.com/h4sh3d/farcaster-core/tree/prepare-release
+Jul 21 14:17:50 <h4sh3d>	I have one commit not yet pushed about the license
+Jul 21 14:18:30 <h4sh3d>	I checked our current dependencies in core and nothing is against LGPL-3.0, which was one of the possibilities
+Jul 21 14:18:47 <h4sh3d>	I for going forward with LGPL
+Jul 21 14:19:19 <h4sh3d>	(deps are using MIT/Apache2/CC0-1.0)
+Jul 21 14:19:35 <h4sh3d>	any opposition with that license?
+Jul 21 14:19:30 <TheCharlatan>	(here too, just lurking for now)
+Jul 21 14:19:45 <h4sh3d>	or counter-propositions?
+Jul 21 14:19:53 *	h4sh3d hi TheCharlatan
+Jul 21 14:20:12 <zkao>	LGPL was what we always planned to use
+Jul 21 14:22:17 <h4sh3d>	good.  I let you have a look before it gets merged https://github.com/farcaster-project/farcaster-core/pull/82
+Jul 21 14:23:35 <zkao>	i think we're on track to finalize milestone 2 by end of next month
+Jul 21 14:23:49 <zkao>	what are your thoughts?
+Jul 21 14:24:03 <h4sh3d>	last thing for me;  I played a bit with the node and docker and updated the doc https://github.com/farcaster-project/farcaster-node#docker-usage
+Jul 21 14:24:10 <h4sh3d>	yes, I think so
+Jul 21 14:24:12 <zkao>	TheCharlatan: how is the syncer going?
+Jul 21 14:25:28 <TheCharlatan>	I got my covid shot last week Thursday, and got sick from it until sunday, so lost a lot of time. Been working on it the past two days though. 
+Jul 21 14:26:35 <TheCharlatan>	It is coming along, but there is one spec in RFC-5 where I'm not entirely sure if it is reasonable, the watch_transaction task / watch_transaction event.
+Jul 21 14:27:00 <zkao>	how should it be stated instead?
+Jul 21 14:28:57 <TheCharlatan>	so, in short, the problem is that electrum for example does not keep track of the confirmation height of a transaction.
+Jul 21 14:29:31 <TheCharlatan>	this is problematic, because when you get the watch_transaction task, you don't know how many confirmations the transaction may already have.
+Jul 21 14:30:20 <h4sh3d>	what does electrum return? a bool ok or not?
+Jul 21 14:30:34 <TheCharlatan>	depends which call you are using obviously :P
+Jul 21 14:30:48 <TheCharlatan>	but for get_transaction it is rawtransaction, that you can then serialize. 
+Jul 21 14:30:51 <zkao>	i always thought it was the job of the syncer to keep track of the depth of a tx
+Jul 21 14:31:04 <zkao>	not of electrum
+Jul 21 14:31:31 <TheCharlatan>	yeah, the problem is not tracking it, but finding the initial truth.
+Jul 21 14:31:51 *	mfoolb has quit (Remote host closed the connection)
+Jul 21 14:32:13 <zkao>	but all wallets need that
+Jul 21 14:33:01 <TheCharlatan>	no, wallets typically work differently.
+Jul 21 14:33:24 <TheCharlatan>	you have indexes that track transactions by script and those include the height.
+Jul 21 14:33:36 <zkao>	so u have the solution
+Jul 21 14:33:39 *	mfoolb (~mfoolb@gateway/tor-sasl/mfoolb) has joined
+Jul 21 14:34:01 <TheCharlatan>	building our index seems needlessly complicated though.
+Jul 21 14:34:55 <h4sh3d>	do we access only electrum or also a full node? (this can be query to the full node no?)
+Jul 21 14:34:47 <TheCharlatan>	there is an option you can pass to electrum to include the blockhash and confirmations, but many servers don't support it: https://electrumx.readthedocs.io/en/latest/protocol-methods.html#blockchain-transaction-get
+Jul 21 14:35:05 <TheCharlatan>	it's the same problem with the full node.
+Jul 21 14:35:49 <zkao>	it would be good if in the next 2 weeks or so we have some way to start using the syncer so that we can test the rest of the stack properly
+Jul 21 14:36:22 <zkao>	do you think that is reasonable? just bother the hell of everybody and we will make it work somehow
+Jul 21 14:36:48 <TheCharlatan>	there's no rpc call to achieve this to my knowledge.
+Jul 21 14:36:57 <TheCharlatan>	I totally think that's reasonable.
+Jul 21 14:37:17 <h4sh3d>	ok, but with verbose=true and electrum it should work
+Jul 21 14:37:34 <h4sh3d>	so we can start with that, on our electrs servers first
+Jul 21 14:37:57 <h4sh3d>	seems good for you?
+Jul 21 14:38:01 <TheCharlatan>	it should, but as I said, I'm not sure which servers support. I think electrs doesn't IIRC.
+Jul 21 14:38:26 <TheCharlatan>	at least when I connect to blockstream's public electrs, it's telling me this method is not supported.
+Jul 21 14:39:11 <zkao>	afk
+Jul 21 14:40:07 <h4sh3d>	ok
+Jul 21 14:40:15 <TheCharlatan>	I'll try again with a local electrs then.
+Jul 21 14:42:04 <zkao>	h4sh3d: last thing, can u get swap_id in all the protocol messages? issue #81
+Jul 21 14:42:21 *	mfoolb has quit (Ping timeout: 244 seconds)
+Jul 21 14:42:31 <zkao>	that one is blocking
+Jul 21 14:42:46 <h4sh3d>	yes, on it
+Jul 21 14:42:51 <zkao>	merci
+Jul 21 14:44:42 <h4sh3d>	TheCharlatan: I able to assist you on the syncer work, please poke me when you need so
+Jul 21 14:47:20 *	mfoolb (~mfoolb@gateway/tor-sasl/mfoolb) has joined
+Jul 21 14:48:06 <h4sh3d>	zkao: regarding the swap id, currently there is methods to convert back and forth between bundles and protocol messages
+Jul 21 14:47:59 <TheCharlatan>	will do, I will need some help with the scriptPubkey<->address serializations once the transaction task is done.
+Jul 21 14:48:49 <h4sh3d>	TheCharlatan: ok
+Jul 21 14:49:37 <h4sh3d>	zkao: now I need more data to build the protocol messages, I think the best way is to add this when we convert from bundles->protocol message
+Jul 21 14:49:54 <h4sh3d>	what do you think?  or do you want swap_id on bundles too?
+Jul 21 14:51:17 <zkao>	taker creates swapid first when taking the offer
+Jul 21 15:35:00 <h4sh3d>	zkao: opened https://github.com/farcaster-project/farcaster-core/pull/83 on core
+Jul 21 15:35:58 <h4sh3d>	changes on tests/bundles.rs https://github.com/farcaster-project/farcaster-core/pull/83/files#diff-353f3f5f096f70cb4df0243daeedcb4ba48d7e4746e7c4474eb79da4dd29ad15 will give you a good idea on the impact in the node
+Jul 21 15:36:53 <TheCharlatan>	ah, I was wrong, the verbose argument is indeed accepted by getrawtransaction and returns confirmations. So even if the servers don't respect it, we could just directly query bitcoind.
+Jul 21 15:38:02 <TheCharlatan>	I'm going to need to open a pull request in rust-electrum-client to enable it in any case though.
+Jul 21 15:38:41 <h4sh3d>	:thumbsup:
+Jul 21 15:39:59 <h4sh3d>	zkao: issue #80 is less trivial than 81 but I'll work on it ASAP.  does it blocks on your side?

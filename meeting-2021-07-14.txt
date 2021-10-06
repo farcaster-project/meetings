@@ -1,0 +1,100 @@
+Jul 14 14:01:28 <h4sh3d>	Hi
+Jul 14 14:02:24 <lederstrumpf[m]>	Hi - on the road and I'll be afk for now - might join later.
+Jul 14 14:08:45 <TheCharlatan>	so... what have you been up to h4sh3d?
+Jul 14 14:10:08 <h4sh3d>	I opened a PR on the node to integrate updates in core: https://github.com/farcaster-project/farcaster-node/pull/48
+Jul 14 14:10:59 <h4sh3d>	I think the best option for this one is to rebase ontop of https://github.com/farcaster-project/farcaster-node/pull/47 and see how it goes (I didn't yet)
+Jul 14 14:12:54 <h4sh3d>	I reworked the encoding in core https://github.com/farcaster-project/farcaster-core/pull/59 and integrated some quick changes to wallet to integrate better in node https://github.com/farcaster-project/farcaster-core/pull/61
+Jul 14 14:13:43 <h4sh3d>	about the wallet: for now it is in core, but we can change everything: the impl (not complete now and more for testing) and where we want this impl (node or core)
+Jul 14 14:14:31 <h4sh3d>	and last thing I added some test on core with GitHub Actions
+Jul 14 14:15:27 <h4sh3d>	static analysis (clippy & fmt), compile with different targets (stable, nightly, ...), tests (unit & integration) and RPC tests (bitcoin transactions in regtest mode)
+Jul 14 14:16:12 <h4sh3d>	for the latest I started a new repo 'containers' to output the containers we need (for now just bitcoin-core): https://github.com/farcaster-project/containers
+Jul 14 14:16:17 <TheCharlatan>	nice, did clippy give you a lot to do?
+Jul 14 14:17:24 <h4sh3d>	why not using existing images?  because the CI GH Action uses `docker create ...` and the arguments you control are not sufficient for using e.g. coblox/bitcoin-core (I can give details if someone wants)
+Jul 14 14:17:33 <h4sh3d>	TheCharlatan: Yes :)
+Jul 14 14:18:09 <h4sh3d>	so I removed `-- -D warnings` that turns all warn into errors
+Jul 14 14:18:11 <h4sh3d>	haha
+Jul 14 14:18:12 <h4sh3d>	for now
+Jul 14 14:18:36 <h4sh3d>	there was 3-4 errors given by the current clippy and +50 warns
+Jul 14 14:18:46 <TheCharlatan>	Ok, that still seems manageable. 
+Jul 14 14:19:01 <h4sh3d>	oh, and I also played with GH settings
+Jul 14 14:19:23 <h4sh3d>	for the location it was:  '#monero-swap on freenode'
+Jul 14 14:19:30 <h4sh3d>	in the org settings
+Jul 14 14:19:52 <h4sh3d>	they switch from a text input into a list of countries
+Jul 14 14:20:03 <h4sh3d>	but I wanted to update to  #monero-swap on libera.chat 
+Jul 14 14:20:15 <h4sh3d>	guess what...
+Jul 14 14:20:25 <h4sh3d>	they don't do server side validation ;p
+Jul 14 14:20:29 <TheCharlatan>	fun!
+Jul 14 14:20:49 <h4sh3d>	that was my 10 min fun project of yesterday haha
+Jul 14 14:21:30 <h4sh3d>	that's it for me
+Jul 14 14:21:42 <TheCharlatan>	can you inject html into the location field?
+Jul 14 14:22:01 <h4sh3d>	I didn't try, but I guess not
+Jul 14 14:22:24 <h4sh3d>	my take is they accept a string, but they don't enforce the country list
+Jul 14 14:22:34 <h4sh3d>	only the new UI does
+Jul 14 14:22:55 <h4sh3d>	*I didn't try, but I HOPE not
+Jul 14 14:23:10 <TheCharlatan>	yeah, that would make sense.
+Jul 14 14:24:04 <TheCharlatan>	anyway, I am still doing some research on the syncer architecture. Basically I am attempting what zkao proposed to me.
+Jul 14 14:26:09 <h4sh3d>	did you look at #47 on node?
+Jul 14 14:26:38 <h4sh3d>	I think if we both ack we can merge it
+Jul 14 14:26:45 <h4sh3d>	then I rebase my work
+Jul 14 14:26:44 <TheCharlatan>	I did, yes, but not done yet.
+Jul 14 14:26:49 <TheCharlatan>	I'll finish later today.
+Jul 14 14:27:55 <h4sh3d>	ok, I did but I'll 'smash the review button' too
+Jul 14 14:29:08 <h4sh3d>	about syncer's work in core, do your current exepriments require changes?
+Jul 14 14:29:22 <TheCharlatan>	no, at least not yet.
+Jul 14 14:29:24 *	tobtoht- (~tobtoht@gateway/tor-sasl/tobtoht) has joined
+Jul 14 14:29:43 <h4sh3d>	or can I go ahead with the 3 PRs that are ready for review?
+Jul 14 14:29:45 <TheCharlatan>	yes, do it!
+Jul 14 14:29:47 *	tobtoht has quit (Ping timeout: 244 seconds)
+Jul 14 14:30:12 <h4sh3d>	ok
+Jul 14 14:30:52 <h4sh3d>	if you need to create containers for testing the syncers in CI
+Jul 14 14:30:52 *	tobtoht- has quit (Remote host closed the connection)
+Jul 14 14:31:04 <h4sh3d>	this is a good start: https://github.com/farcaster-project/containers/tree/main/bitcoin-core
+Jul 14 14:31:05 *	tobtoht (~tobtoht@gateway/tor-sasl/tobtoht) has joined
+Jul 14 14:31:32 <TheCharlatan>	perfect, a good example always makes it easier.
+Jul 14 14:32:11 <h4sh3d>	and as I mentioned previously the GH Action uses `docker create` and only let you pass ENV variable, so if you need to configure your container at creation time you can only use that
+Jul 14 14:32:51 <h4sh3d>	I guess this one will be ok for the bitcoin side but we probably want one for monerod
+Jul 14 14:33:14 <h4sh3d>	but that's for later
+Jul 14 14:33:19 <zkao>	hey, sorry
+Jul 14 14:33:48 <h4sh3d>	hey
+Jul 14 14:34:00 <zkao>	catching up
+Jul 14 14:36:54 <zkao>	so i improved state validation in swapd
+Jul 14 14:37:24 <zkao>	i went through all teh message flow from maker side 
+Jul 14 14:38:44 <zkao>	i documented, what the flow is in here, as previosly requested by TheCharlatan 
+Jul 14 14:38:50 <zkao>	https://is.gd/C1tma7
+Jul 14 14:39:38 <TheCharlatan>	thank you zkao
+Jul 14 14:39:43 <zkao>	i would prefer to leave discussion on that for when its completed
+Jul 14 14:39:54 <zkao>	as you might see, the taker side is a bit empty
+Jul 14 14:40:00 <zkao>	its because i havent gone through that yet
+Jul 14 14:40:28 <zkao>	i moved on to work on internet2 / peer connection, as i was conflicting with h4sh3d's work
+Jul 14 14:42:39 <h4sh3d>	the 0-side is Alice or Bob and the other side is the counter-party in the diagram, correct? (and peer is display once for brievty)
+Jul 14 14:43:23 <zkao>	i don't want to discuss that yet, because it will take ages, just want to give heads up im documenting the flow
+Jul 14 14:46:47 <zkao>	ah, what i have to say is: i used the msg bus like this -- when msgs are coming in from the counterparty, even after being relayed or processed, im relay the message or data from it thu the msg bus still
+Jul 14 14:47:43 <zkao>	when a msg is going out from a peer, it goes through the ctl bus till it reaches swapd
+Jul 14 14:49:01 <zkao>	i was trying to segregate the msgs that come from counterparty vs msgs from self
+Jul 14 14:59:18 <lederstrumpf[m]>	https://github.com/farcaster-project/farcaster-node/pull/45
+Jul 14 14:59:18 <lederstrumpf[m]>	is ready for review, TheCharlatan or zkao
+Jul 14 15:08:03 <zkao>	lederstrumpf[m]: reviewed and merged
+Jul 14 15:15:04 <zkao>	i added a issue to core regarding missing swap_id
+Jul 14 15:15:51 <zkao>	currently node is using channel_id from lnp-core
+Jul 14 15:16:26 <zkao>	in the next month or so, i guess we can drop that dependency, thus it would be good to have our own ids
+Jul 14 15:16:31 <zkao>	h4sh3d
+Jul 14 15:17:18 <h4sh3d>	ok, will tackle that
+Jul 14 15:18:03 <h4sh3d>	I just had a look again at #47 on node, LGTM and doesn't seems different to patch regarding changes in core
+Jul 14 15:17:59 <zkao>	ah, offer id would be good too
+Jul 14 15:18:20 <h4sh3d>	sure some code has been moved, but the function calls I patched are the same
+Jul 14 15:18:50 <h4sh3d>	having an offer_id from a public offer
+Jul 14 15:19:06 <zkao>	^ this
+Jul 14 15:19:22 <zkao>	or public_offer_id if u prefer
+Jul 14 15:19:54 <zkao>	right now the taker shows up with the entire offer
+Jul 14 15:19:59 <zkao>	to the maker
+Jul 14 15:22:17 <h4sh3d>	TheCharlatan: do you want to keep https://github.com/farcaster-project/farcaster-core/pull/55 open?
+Jul 14 15:22:30 <TheCharlatan>	no, I'll close
+Jul 14 15:23:05 <zkao>	just to confirm you guys get this regarding the buses segregation
+Jul 14 15:23:26 <zkao>	msgs propagating thru Ctl bus: self -> other
+Jul 14 15:23:37 <zkao>	msgs propagating thru Msg bus: other -> self
+Jul 14 15:23:43 <zkao>	thats how i did
+Jul 14 15:24:15 <zkao>	on Ctl bus, self -> self as well
+Jul 14 15:24:49 <h4sh3d>	ok
+Jul 14 15:25:48 <zkao>	from swapd on, self -> other goes thru Msg bus as well
+Jul 14 15:27:42 <h4sh3d>	Interesting project (written in go): https://github.com/taurusgroup/cmp-ecdsa
+Jul 14 15:28:00 <h4sh3d>	for threshold ECDSA signing

@@ -1,0 +1,129 @@
+Aug 04 13:42:33 <h4sh3d>	Meeting in 15 minutes
+Aug 04 14:02:12 <zkao>	hello
+Aug 04 14:02:36 <h4sh3d>	Hi
+Aug 04 14:03:18 <lederstrumpf[m]>	hi
+Aug 04 14:05:57 <zkao>	So what is everybody up to?
+Aug 04 14:07:17 <zkao>	thank you, TheCharlatan and h4sh3d for quickly reviewing my PR
+Aug 04 14:08:17 <h4sh3d>	you did a good job
+Aug 04 14:08:59 <h4sh3d>	I've been working on ECDSA and segwit v0 integration in core: https://github.com/farcaster-project/farcaster-core/pull/86
+Aug 04 14:09:15 <h4sh3d>	I'll stop working on that PR as it might come too big otherwise
+Aug 04 14:09:35 <h4sh3d>	but I have other refactor I want to do, but that's for next week I think
+Aug 04 14:10:16 <h4sh3d>	tl;dr; the Bitcoin is now Bitcoin<Something> and there is a Bitcoin<Segwitv0> implementation.
+Aug 04 14:10:44 <h4sh3d>	the Segwitv0 impl is features as experimental (feature enable by default for convinence for now)
+Aug 04 14:11:05 <h4sh3d>	and it uses ecdsa_fun and secp256fun from LL Fournier
+Aug 04 14:11:08 <zkao>	excellent!
+Aug 04 14:11:51 <h4sh3d>	I can now create a SegwitV1Schnorr something for Schnorr in script and MuSig later with even more off-chain
+Aug 04 14:12:06 <h4sh3d>	but this requires a lot of upstream work in rust-bitcoin too
+Aug 04 14:12:30 <h4sh3d>	zkao, TheCharlatan fee free to review and merge
+Aug 04 14:12:47 <zkao>	the PR is ready for review?
+Aug 04 14:13:11 <h4sh3d>	yes
+Aug 04 14:14:57 <h4sh3d>	last thing, the 'Wallet' (chain::pair::btcxmr::Wallet) in core is more a key manager than a Wallet, it knows the seed and how to generate keys and sign
+Aug 04 14:15:04 <h4sh3d>	but the name is bad
+Aug 04 14:15:26 <h4sh3d>	it is misleading I think
+Aug 04 14:15:51 <h4sh3d>	happy to hear your opinions on that
+Aug 04 14:15:41 <lederstrumpf[m]>	maybe KeyManager?
+Aug 04 14:16:01 <lederstrumpf[m]>	basically the same, but does not overlap with actual wallet
+Aug 04 14:17:10 <zkao>	anything else, h4sh3d ?
+Aug 04 14:17:31 <h4sh3d>	if you agree with that yes
+Aug 04 14:17:37 <h4sh3d>	no that's it for me
+Aug 04 14:17:36 <zkao>	key manager is very clear for what it is
+Aug 04 14:18:13 <h4sh3d>	next step is integrating the cross group dleq in core
+Aug 04 14:18:28 <h4sh3d>	based on kayabaNerve ASMR work
+Aug 04 14:18:44 <h4sh3d>	I'll see how I can import what's inside ASMR
+Aug 04 14:18:58 <h4sh3d>	that's it (for real now :p)
+Aug 04 14:19:07 <zkao>	ok, i continue working on the message exchanges in the node
+Aug 04 14:19:15 <zkao>	this is how things are now:
+Aug 04 14:19:17 <zkao>	https://sequencediagram.org/index.html#initialData=C4S2BsFMAIDEEMBOBjeBnYlHQHYHsATSAKGIAclRkQKdhpgB9Ad3nCmHMpGtvqbSsyXRFRrw6DRgDMkqDFgIixfKcnAhlPcZLKRFW3hPoBbRus0VR21Wdkp0mREqsrj0M4PjDXN92dZ2SE5iOzlHRWgAWgA+DxlwhWdoAC5ocHgAVxxkAAtoe3knAgAdHBMJTLZwAE9QhIckgmi4sMbi1PSsnPzAjiU2osUAHiiA6uCUgGEIaAAJSHY8eosW+MKI5LSAWXgAa0gAeWlpLGgACiJTxERIAgBKeo2m2PGg4GnZgHFggGlIGpoJ6JYqjN4cT7gaD-QEXfD8PDQABG
+Aug 04 14:19:19 <zkao>	MFyi2aeBw0Aw8Ewj0GmwIrwaQ2cKV2B2O1wuyExoBwmUgaHxJMJxOexRSGWyeTKekiGgUOHI+mc7JBikh80W4GWBJeMXlnPgyFAADdcTA8CcsMQmBzIrEpAatl0efkTaVypVqnV9RLkkb7e1ImluT1oH1gkomF7gLFnaSCFKFks9eYNGtA4TOjMoQAVfZHHXYS6Qa63B7hv2jaNNKU-YAwoG+ib+mJ5zlx6EAtBwvAI5Go9HQTHY4Cax6VkZRbtk6uJykpml0kAMpld1lNKNTjpu7q8nD85K0nA4SCq8OW0bL4PV0OyrcOokV2eSlXqzWtlPZsu5s-92aD5PXW-vAMsMspZC3K8dg7YH6b4cB+lpSgAMguuQAMpCOGXhkDOlqxrMB
+Aug 04 14:19:21 <zkao>	7LAIQjQKMxrHihCZJrB3jwZhRq7p02xoAA5tAz6IFMeAmCYYAioarQPs0OxUTRSZ0QxTGcEqrHxH65FcbR9GMcx4LBMSfrfr+mAeDxnplvUIlGoJprVpB5qEcIngkWxyFpPuMpyuxawGd4eHQBSkB6aQVmIaRoocbZXF2bxkmcBh1nYWRnHUZ5En8cR1kua67nUQASpAaqQGwLGOmxCGiTFcUJVC5z-mcIB1sAaLYpAOBEIgjxJc02FOWl0CxfFbAXBUAHQHlRUlVgLKpRpn7vDVAAKSDwCYQJkU6jCpYFtUZQ15xNbldZoMVpWTl1cSlr1k0DYgQ1AgAvLtACiJXXtAIVgFEdWZdAF77cQ+2eS1dYAEJ4Eit3SfQ3UiWkiDZGpZa
+Aug 04 14:19:23 <zkao>	WeNmEmbM9G3AAgogSJgNt9KUdBwSZD4rlYVE8QTVFp14BDUMw7iY7w4jwi+Yh-ko5NYOQJD0PALDBMI8ASPAcEqNSBjFHUZT1N43DDNM+tHAzhj1axdI2QEH1iB4MgdyZLc0EgJROC4nLTJhc5cQBZjovi5L0uy-LivK4ztwjSj3Xs1xOslXrMsEKrCtKyrpv-b1VVA9Zk3WxLUt2w7RvO2rH2A8LsxPZkNS2wb9kBybJBke7lvUeHke+9HjvG6r6us1rHPQCnUf24bTtx9nY3fZjBdp0XMcl1n+1HRi0jQHpUR84hN27aQ93Ka14MaDLt0Cyz5cAz9f3D59a0e4hINQlzuO0-jOCE4zyORNhJM1QvNN0yv7f1KlZORXnO88-TROu
+Aug 04 14:19:25 <zkao>	4LifA5jZ9L7zl-Bxbt8i+muvV-7dcu9VEWmnn3tC5f0zi7Ua08k5TTFjbT+xcQFq0nqzLeXt37QP1jXDOgcSw9UFmNUOUIq5oOAYHCqiCZ41QIX7WBxDqrH3-lxCh6dY5Z1-mxCuecGHoKYbcO6h1jrahbkINuRNrqqlukAA
+Aug 04 14:19:27 <zkao>	ops, wrong link
+Aug 04 14:21:02 <zkao>	tiny.cc/e0jhuz
+Aug 04 14:21:05 <zkao>	shortenned
+Aug 04 14:22:52 <zkao>	look btw MakeOffer deferred and MakeOffer continues
+Aug 04 14:25:36 <h4sh3d>	IIRC and with this diagram farcasterd ask walletd for the keys and give them to peerd at launch 
+Aug 04 14:25:52 <zkao>	correct, but it deffers a request, gets the keys, and then continues it
+Aug 04 14:26:02 <zkao>	this pattern will probably show up more times
+Aug 04 14:26:34 <zkao>	and it demonstrates that we are using the requests to store state
+Aug 04 14:26:59 <h4sh3d>	and we need this because the identity of the peerd is inside the offer (so other can contact)
+Aug 04 14:27:15 <h4sh3d>	correct?
+Aug 04 14:27:34 <zkao>	correct, and additionally it has to launch peerd
+Aug 04 14:27:51 <zkao>	is listen mode
+Aug 04 14:28:02 <zkao>	in*
+Aug 04 14:28:41 <zkao>	so the way i did it, i push the request to some vector of pending requests in order to defer, using an index
+Aug 04 14:29:35 <zkao>	when the other microservice responds, it includes that same index, and thus we can continue the request
+Aug 04 14:30:01 <h4sh3d>	and what if farcasterd, after receiving make offer launch peerd, peerd ask walletd for his keys and return his identity to farcasted (at launch when ready), then we complete the offer as it is now?
+Aug 04 14:30:33 <h4sh3d>	it just revert who do what between peer and farcaster, but I don't know what's best
+Aug 04 14:30:23 <zkao>	that's the best solution, but would require a rewrite of peerd
+Aug 04 14:30:48 <h4sh3d>	ok
+Aug 04 14:31:19 <h4sh3d>	yeah I remember now discussing this already, sorry
+Aug 04 14:31:03 <zkao>	the keys are used many times while launching peerd
+Aug 04 14:31:11 <lederstrumpf[m]>	is `peerd` intended to represent both maker & taker `peerd` s, or is that a temporary shortcut?
+Aug 04 14:31:30 <zkao>	makers peerd is in listen mode
+Aug 04 14:31:38 <zkao>	takers in connect mode
+Aug 04 14:32:55 <zkao>	its easy to get takers nodes with many ids, but not sure about makers
+Aug 04 14:33:31 <zkao>	but we'll use only 1 key for a long time
+Aug 04 14:34:19 <h4sh3d>	lederstrumpf[m]: yes in the diagram it's a shortcut for both peerd
+Aug 04 14:34:15 <zkao>	ah, now i get what he asked
+Aug 04 14:34:38 <h4sh3d>	:)
+Aug 04 14:34:35 <lederstrumpf[m]>	thanks ^^
+Aug 04 14:34:36 <zkao>	yes, each one is running their own peerds
+Aug 04 14:35:52 <h4sh3d>	up to end of commit/reveal act the diagram looks good to me
+Aug 04 14:35:57 <lederstrumpf[m]>	makes sense to compress them like that since they'll just passthrough in whichever direction
+Aug 04 14:36:42 <zkao>	that is what i was trying to depict, yes
+Aug 04 14:37:50 <zkao>	so with this last merged PR i find there is no need of big changes for a bit
+Aug 04 14:38:28 <zkao>	and i continue working on debugging the message flow, and make sure the code matches the diagram
+Aug 04 14:39:28 <h4sh3d>	IIRC it is now the case that `Msg` messages are the ones shared between the participants and `Ctl` message only local to the microservices, correct or this needs more changes?
+Aug 04 14:39:50 <zkao>	Msg is what is received from counterparty
+Aug 04 14:39:59 <zkao>	and should be checked with care
+Aug 04 14:40:11 <zkao>	Ctl are the safe messages
+Aug 04 14:40:54 <zkao>	except for messages send from swapd to peerd that are going to get to the counterparty, that also go through Msg
+Aug 04 14:41:33 <zkao>	we should rename these buses with better names eventually
+Aug 04 14:42:39 <zkao>	does it make sense?
+Aug 04 14:43:11 <h4sh3d>	make sense for me, totally!
+Aug 04 14:43:56 <zkao>	that is it from me
+Aug 04 14:44:24 <h4sh3d>	what if m_swap never receive the msg_reveal from the taker.  how could be introduce some sort of timeout on operation that involve the counterparty?
+Aug 04 14:46:36 <zkao>	timeout regarding the swap being stuck or timeout triggered by a given message?
+Aug 04 14:47:01 <zkao>	meant to say: this message + 20 seconds
+Aug 04 14:48:07 <h4sh3d>	timeout if the other swap participant does not send any messages
+Aug 04 14:48:48 <h4sh3d>	it might be: when we receive A we start a timer for 20 sec, at the end of the 20 sec we abort swap, if we receive a message within 20 sec we cancel the timer
+Aug 04 14:49:25 <h4sh3d>	or something else.  the question for me is how idle counter-party is handled
+Aug 04 14:49:52 <zkao>	i think we have to use a timer, and just allow proceding if timer is not up
+Aug 04 14:50:03 <zkao>	and only allow aborting otherwise
+Aug 04 14:50:18 <zkao>	we clear the timer each time counterparty sends a message
+Aug 04 14:50:37 <zkao>	something like this?
+Aug 04 14:51:07 <h4sh3d>	yes
+Aug 04 14:52:16 <h4sh3d>	i think this should be ruffly fletched out "soon", we need to handle that kind of aborts and if it has too many impacts on the structure it's good to have them sonner than later
+Aug 04 14:52:36 <h4sh3d>	but you have a better view on that than me, was just asking
+Aug 04 14:52:25 <zkao>	it wont have any affect in the structure
+Aug 04 14:52:30 <zkao>	effect*
+Aug 04 14:53:44 <h4sh3d>	ok good.  and last question on the diagram, why does swapd send Msg Params to walletd?
+Aug 04 14:54:18 <zkao>	that is a borderline one
+Aug 04 14:54:54 <zkao>	its data from counterparty but its preprocessed
+Aug 04 14:55:38 <zkao>	i still prefer it goes from peerd -> swapd -> walletd through msg bus
+Aug 04 14:55:57 <zkao>	and from wallet -> swapd through Ctl bus
+Aug 04 14:56:15 <zkao>	it reaches the edge node and change bus
+Aug 04 14:57:34 <zkao>	I want news on the syncer
+Aug 04 14:57:57 <TheCharlatan>	I should something at least, yes :P
+Aug 04 14:58:23 <h4sh3d>	oh, it does up to there because> `swapd` is the 'deamon' and `walletd` is the 'client', and the client needs everything to build and validate tx/keys/...
+Aug 04 14:58:45 <h4sh3d>	yeah go ahead with syncer
+Aug 04 14:59:54 <TheCharlatan>	I don't have much to share yet other than that I think I found a solution for feeding data unidirectionally back into the message bus. 
+Aug 04 15:00:24 <zkao>	how does it work?
+Aug 04 15:02:11 <TheCharlatan>	basically it copies the existing peerd runtime handling. Peerd takes a request from a remote peer in a separate thread and then sends it over an internal bridge bus to the actual peerd runtime where it enters the message bus shared between the microservices.
+Aug 04 15:03:23 <TheCharlatan>	in my current implementation we take a shortcut, by only handling requests on the bridge bus in the syncerd runtime.
+Aug 04 15:03:51 <TheCharlatan>	a raw zmq socket feeds events into this bridge from a separate thread.
+Aug 04 15:05:08 <TheCharlatan>	I'm still debugging some things, but it looks like this pattern is going to work.
+Aug 04 15:05:31 <TheCharlatan>	So I am hopeful that I can open the PR for the syncer by end of the week.
+Aug 04 15:06:10 <zkao>	oh, i see, it doesn't haha
+Aug 04 15:06:45 <TheCharlatan>	lol
+Aug 04 15:07:31 <h4sh3d>	zkao showing all its support to TheCharlatan haha
+Aug 04 15:07:42 <h4sh3d>	:p
+Aug 04 15:08:14 <h4sh3d>	anyway, cool to see this going ahead.  ping us when you need review
+Aug 04 15:08:30 <zkao>	that is really cool, similar to the peerd i wont understand how that works, but it does work haha
+Aug 04 15:10:35 <h4sh3d>	anyone else want to share something?
+Aug 04 15:12:14 <lederstrumpf[m]>	I don't have anything to share.
+Aug 04 15:13:04 <h4sh3d>	otherwise I think we can adjourn.  thank everybody for attending,  ...and see you next week! :)
+Aug 04 15:12:52 <lederstrumpf[m]>	Last few weeks had a lot of travel disruptions, but that's quiet for the next few weeks, so will start being active regularly.
+Aug 04 15:12:54 <lederstrumpf[m]>	cheers
+Aug 04 15:13:35 <h4sh3d>	awesome, ciao

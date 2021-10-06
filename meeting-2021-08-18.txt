@@ -1,0 +1,33 @@
+Aug 18 12:54:12 <zkao>	actually do we have a meeting today, and when?
+Aug 18 13:21:31 <h4sh3d>	yes, I think we do. at 12 UTC, 14:00 CEST
+Aug 18 13:21:50 <h4sh3d>	I'm around 
+Aug 18 14:03:10 <zkao>	hey
+Aug 18 14:03:23 <zkao>	lederstrumpf[m], TheCharlatan, h4sh3d 
+Aug 18 14:03:44 <h4sh3d>	hello
+Aug 18 14:03:49 <lederstrumpf[m]>	hey
+Aug 18 14:04:58 <TheCharlatan>	hi :)
+Aug 18 14:05:30 <TheCharlatan>	h4sh3d, right it's not used currently. I might move the events back there again, but for now I'm comfortable with keeping them in syncer.rs
+Aug 18 14:06:36 <h4sh3d>	Ok. I think all in syncer is very self explanatory
+Aug 18 14:06:54 <h4sh3d>	I'm adding some doc on the code, that's why I asked :)
+Aug 18 14:09:08 <h4sh3d>	yesterday I worked a bit on monero-rs, version 0.14 have been released
+Aug 18 14:09:22 <h4sh3d>	it should not break anything in core and node
+Aug 18 14:09:39 <h4sh3d>	we can upgrade when we want, no stress
+Aug 18 14:09:56 <h4sh3d>	and I'm also currently adding more documentation on core
+Aug 18 14:10:06 <zkao>	the bitcoin syncer is mostly hooked up in the node, and I tested watching txs, and syncer sends them back to swapd, so that i can confirm works
+Aug 18 14:10:25 <zkao>	thank you for coding that, TheCharlatan 
+Aug 18 14:10:54 <zkao>	*syncer sends events back to swapd
+Aug 18 14:18:28 <zkao>	i'd like to get 63, 64 merged
+Aug 18 14:18:49 <zkao>	in the node
+Aug 18 14:19:30 <TheCharlatan>	as said yesterday, I opened some PR's in monero-rpc-rs. The monero syncer itself has the logic more or less in place, however I still need to find a nice architecture for handling the async requests.
+Aug 18 14:20:16 <TheCharlatan>	I ACK'ed 63 zkao, but still need to look at 64.
+Aug 18 14:20:38 <lederstrumpf[m]>	I'll tACK 63 soon and will then review 64
+Aug 18 14:20:39 <zkao>	64 is a trivial one
+Aug 18 14:21:17 <zkao>	let me rebase before you guys review, after merging 63
+Aug 18 14:22:57 <TheCharlatan>	I'll let you merge 63 then lederstrumpf.
+Aug 18 14:23:13 <zkao>	how is work on the monero syncer going, TheCharlatan ?
+Aug 18 14:28:51 <TheCharlatan>	the current blocker is really getting the async handling right. Which is basically down to me finding he right pattern for the job.
+Aug 18 14:29:35 <TheCharlatan>	However, with the right pattern I think we can also make the bitcoin syncer even more efficient.
+Aug 18 15:36:32 *	tdc_ (~tdc@217.61.224.137) has joined
+Aug 18 15:36:57 <lederstrumpf[m]>	zkao: 63 is merged, so 64 can be rebased
+Aug 18 15:39:35 <zkao>	lederstrumpf[m]: thank you, 64 is rebased
+

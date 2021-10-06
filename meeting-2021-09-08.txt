@@ -1,0 +1,22 @@
+Sep 08 02:00:22 <zkao>	karce[m]
+Sep 08 14:19:57 <zkao>	hey, if there is no one around, we do our meeting at 14:00 UTC (2 hours later)
+Sep 08 16:11:20 <h4sh3d>	hi
+Sep 08 16:11:51 <h4sh3d>	some updates on my work this week
+Sep 08 16:11:54 <h4sh3d>	https://github.com/farcaster-project/farcaster-core/pull/126
+Sep 08 16:12:15 <h4sh3d>	I made the basis for taproot ready to be reviewed
+Sep 08 16:13:12 <h4sh3d>	if some of you can have a look :)
+Sep 08 16:13:37 <h4sh3d>	tip: do commit by commit as it contains a lot
+Sep 08 16:14:09 <h4sh3d>	for the slip10 implementation I want to add more tests as the SLIP does not contains vectors for the secp256k1 retry strategy
+Sep 08 16:14:20 <h4sh3d>	so I'm not sure if it is correct or not yet
+Sep 08 16:15:06 <h4sh3d>	also opened for visibility this: https://github.com/farcaster-project/farcaster-core/pull/133
+Sep 08 16:15:45 <h4sh3d>	the current segwitv0 impl is not complete nor good, it just validate the concepts.  This PR will make it proper
+Sep 08 16:16:52 <h4sh3d>	and finally I also worked with TheCharlatan on the containers we use in CI/testing/etc  https://github.com/farcaster-project/containers
+Sep 08 16:17:48 <h4sh3d>	after reintroducing the CI in the node to build the docker image for the node we should be able to have a docker-compose that runs all the stack
+Sep 08 16:38:04 <zkao>	im working on the node, syncer is super buggy, not getting the events reliably
+Sep 08 16:38:19 <zkao>	debugging, adding logs, trying to make things work proper
+Sep 08 16:39:13 <zkao>	so besides of the syncer not giving the events swapd needs here and there correctly, the happy path runs
+Sep 08 16:40:28 <zkao>	the types of the syncer are non-sensical, core is abstract as hell, and syncer is all bytes, the types should be matched, IMO, since there should be a large overlap between the types on the rest of core and the types on syncer
+Sep 08 16:41:57 <h4sh3d>	it is very easy to bring types in the tasks/events
+Sep 08 16:41:54 <zkao>	for you that created all those abstract types
+Sep 08 16:42:17 <h4sh3d>	transactions, public keys, addresses, etc
+Sep 08 16:42:39 <h4sh3d>	but currently it is not done

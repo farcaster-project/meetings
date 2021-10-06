@@ -1,0 +1,4 @@
+Jul 28 12:55:57 <h4sh3d>	I’ll not participate in today’s meeting (in an hour), TheCharlatan and lederstrumpf[m] neither AFAIK
+Jul 28 14:29:35 <zkao>	im around if there are external people joining
+Jul 28 16:57:50 <zkao>	PR  Farcasterd retrieve key from wallet before launching peerd #56  ready to review
+Jul 28 16:58:30 <zkao>	TheCharlatan, h4sh3d 

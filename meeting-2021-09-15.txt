@@ -1,0 +1,46 @@
+Sep 15 05:52:50 <geonic>	Anyone here familiar with this? https://www.reddit.com/r/Particl/comments/pkr41l/closed_beta_for_the_atomic_swaps_dex_has_been/
+Sep 15 08:33:33 <h4sh3d>	Not familiar with this, will have a look at there atomic swap for curiosity :)
+Sep 15 08:35:11 <h4sh3d>	I’ll not be able to attend today’s dev meeting, sry.  No particular update on my side for this week, I’m focusing on Schnorr adaptor currently
+Sep 15 09:37:14 <kayabaNerve>	A community member of theirs did a Python PoC back at the start of all of this. I remember Plasma reached out about needing a proof of knowledge in the DL EQ proof. It required manual stepping along JSON files.
+Sep 15 09:37:35 <kayabaNerve>	It seems like it's evolved? I haven't kept track. I do know where a few of the atomic swap DEXs which were established at the time are now though.
+Sep 15 10:26:03 <kayabaNerve>	Original press release on the topic https://particl.news/monero-and-particl-atomic-swaps-775f87f6208a/
+Sep 15 10:26:07 <kayabaNerve>	Original repo https://github.com/tecnovert/xmrswap/
+Sep 15 11:02:40 <kayabaNerve>	And its a core dev, not just a comm member. Their DEX work is https://github.com/tecnovert/basicswap
+Sep 15 12:41:16 <lederstrumpf[m]>	ack kayabaNerve re. putting it the farcaster impl under `tests/` of the generic library. I'll raise the issue of licensing during the meeting. TLDR: If it's only used for testing, it makes more sense to import as a dev-dependency rather than duplicating the code itself. Despite the static linking constraint of LGPL, it may not impose constraints since this is only used for testing. If it is an issue though, then I'd rather move the
+Sep 15 12:41:16 <lederstrumpf[m]>	DLEQ to MPLv2.0 than MIT.
+Sep 15 13:17:17 <kayabaNerve>	lederstrumpf[m]: Yes and no. If it's under tests/, it can be modified to ensure API/format consistently. That's why I'd like to directly import it. I also don't want a partial MPL and partial MIT codebase.
+Sep 15 13:17:56 <kayabaNerve>	I personally try to stick to the well known licenses unless I have explicit reason. The MPL license does have benefits in general BUT I massively object to some parts of it and it adds a ton of complexity.
+Sep 15 13:18:03 <kayabaNerve>	Notably, I remember the Palemoon BSD port case.
+Sep 15 13:19:33 <kayabaNerve>	Someone shipped Palemoon for BSD in a staging repo, and the Palemoon developers accosted them. Why? They linked against system libs. Linking against non-approved libs is barred by the MPL unless necessary. Under review, they were necessary, yet the build process in question also enabled optimizations. That's a non-standard config requiring approval/removal of all identification as Palemoon. In response to the drama, the BSD staging repo in
+Sep 15 13:19:33 <kayabaNerve>	question just dropped it, and the community massively hated how the Palemoon devs handled it (partially for the obtuse license enforcement, partially for being assholes)
+Sep 15 13:20:43 <kayabaNerve>	So I personally wouldn't bide by a license with such obscure requirements on presentation format (building it any other way being a violation), not to mention the repo with multiple licenses being its own issue, not to mention the lower recognition adding complexity to understanding if you can use the lib at a glance.
+Sep 15 13:21:07 <kayabaNerve>	I don't enjoy anyone looking at a lib and needing to spend more than a few seconds determining if it's usable in their own work.
+Sep 15 14:00:31 <zkao>	geonic: not familiar, but the 1st xmr-btc swap working code was kayaba's asmr, then the 2nd was particl's, iirc
+Sep 15 14:26:01 <kayabaNerve>	ASMR hit the protocol on Aug 16, yet XMR on Sep 3 (by press release date, which may be 1-2 days off). Particl was Sep 15 for the mainnet TX, Sep 29 for the Press Release. COMIT released on Sep 28 yet press released on Oct 6.
+Sep 15 14:51:34 <lederstrumpf[m]>	kayabaNerve: I wasn't aware of the Palemoon BSD port case and having read into it now, I agree it's disgusting. I'll have a proper think about this. My tension is that I obviously want you to be able to use the Farcaster code, but I also want to avoid the slippery slope that gradually moving parts of the code over to MIT opens up.
+Sep 15 14:59:11 <kayabaNerve>	lederstrumpf[m]: I don't see MIT licensing as a slippery slope. I understand how it opens up non-FOSS adoption, yet we already have that thanks to the linking safe harbor and non-FOSS adoption is a key consideration in our current society where cash is still king. The notable differences between MIT are increased amount of non-FOSS (edits), when the primary proposed impl is already MIT making that somewhat irrelevant, and I guess a lack of
+Sep 15 14:59:11 <kayabaNerve>	need to provide the full license with all copies? I personally never liked that requirement
+Sep 15 14:59:40 <kayabaNerve>	Anyways. I do understand your hesistancy. It is all soemthing to consider. Personally, I really like MIT. I understand its issues. I think ideally we would use AGPL and call it a day but...
+Sep 15 15:02:23 <kayabaNerve>	I will also note this is a single component, not Farcaster as a whole or any swap code, and I believe COMIT uses an incompatible GPL (unfortunately only oneway). There's a lot of licensing hell going on here. That's why I'd rather cut through it.
+Sep 15 15:10:55 <zkao>	since you guys are on topic, the node inherited the MIT license https://github.com/farcaster-project/farcaster-node/blob/main/LICENSE
+Sep 15 15:11:22 <zkao>	what shall we do? keep it or relicense to AGPL
+Sep 15 15:13:34 <zkao>	while i see the point in keeping core and dleq libs under AGPL, not so much for the node, that is made to be a hackable environment
+Sep 15 15:14:52 <zkao>	i meant /s/AGPL/LGPL on all above! oopppsss, license expert here hahaha
+Sep 15 15:15:42 <lederstrumpf[m]>	good - I was quite surprised ^^
+Sep 15 15:21:26 <lederstrumpf[m]>	> not so much for the node, that is made to be a hackable environment
+Sep 15 15:21:26 <lederstrumpf[m]>	node is a case where forks purely for deployment, porting etc. are more applicable, and over there, the adoption barriers imposed by LGPL are probably not worth the copyleft gainz. So I'm open to keeping the node MIT - although I really would like to force users to share their fixes for messaging bugs with us :D
+Sep 15 15:28:17 <lederstrumpf[m]>	> Yes and no. If it's under tests/, it can be modified to ensure API/format consistently. That's why I'd like to directly import it. I also don't want a partial MPL and partial MIT codebase.
+Sep 15 15:28:17 <lederstrumpf[m]>	kayabaNerve: if farcaster-core uses asmr's dleq implementation, we have to maintain a consistent API anyway, i.e. I'd keep our independent DLEQ's API the same as used by yours, so you could just import it directly. That would avoid code duplication (more maintenance overhead) and also keep your codebase purely MIT (if we introduce a static linking exception like ZMQ: http://wiki.zeromq.org/area:licensing, or move to MPL for the DLEQ
+Sep 15 15:28:17 <lederstrumpf[m]>	or entire codebase).
+Sep 15 16:11:29 <kayabaNerve>	zkao: I was typing out commentary on why you absolutely cannot do AGPL before you corrected yourself lol
+Sep 15 16:12:47 <kayabaNerve>	lederstrumpf[m]: Not amongst major releases nor early on. It solves multi-repo PRs as well as major releases.
+Sep 15 16:13:26 <kayabaNerve>	I maintain MPL is a disaster and if your DLEQ ib is currently LGPL, which it sounds like it is, it already has such an exception
+Sep 15 16:16:37 <kayabaNerve>	And again, I'd like to try to get a repo among both parties actively working on XMR swaps from Rust. If the core code is MIT yet it doesn't have independent text vectors (instead defining itself as a downstream), unless the repo moves to having multiple licenses, and then I try to bring in a group I believe using GPL2... it becomes increadibly infeasible incredibly quickly. I agree LGPL is largely fine for a library, yet I prefer MIT for
+Sep 15 16:16:37 <kayabaNerve>	being clear cut, and we're discussing a standing impl and adding another to it. If you truly believe LGPL is such a requirement for the DL EQ proof, then it just sounds like we can't agree on a license to collab under and that's that.
+Sep 15 16:18:37 <kayabaNerve>	Correction: GPLv3 is COMIT's XMR BTC swap. COMIT's DL EQ work is currently BSD 0, historicallhy unlicensed.
+Sep 15 16:19:16 <kayabaNerve>	So that does change things in the name of inter-group collab, and any license can be applied on top of BSD 0 as its effective public domain, yet I would feel scummy for taking BSD 0 work and applying a restrictive license to it.
+Sep 15 16:21:52 <kayabaNerve>	As one final note, some developers won't even touch LGPL. Its heavy handedness does eliminate pools of people.
+Sep 15 20:30:25 <jberman[m]>	Are there plans to use the Monero lock time feature in any swap-related use cases?
+Sep 15 20:32:45 <jberman[m]>	(For reference, TheCharlatan 's github issue on removing/fixing/encrypting lock times: https://github.com/monero-project/research-lab/issues/78)
+Sep 16 16:08:11 <TheCharlatan>	jberman[m] no such plans, right now they are not useful. They might be useful eventually once it is possible to chain transactions.
+
