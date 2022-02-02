@@ -1,0 +1,100 @@
+Dec 01 14:03:47 <TheCharlatan>	meeting time?
+Dec 01 14:03:48 *	sgp_[m] (~sgpmatrix@2001:470:69fc:105::3825) has joined
+Dec 01 14:05:55 <lederstrumpf[m]>	I'm available now
+Dec 01 14:09:41 <h4sh3d>	Hey
+Dec 01 14:10:02 <TheCharlatan>	can we go over what still needs to be done?
+Dec 01 14:11:24 <h4sh3d>	ping zkao
+Dec 01 14:12:33 <h4sh3d>	yesterday we did a small frontend to share offers: https://farcaster.dev/
+Dec 01 14:12:52 <h4sh3d>	(the backend is not functional yet)
+Dec 01 14:13:05 <h4sh3d>	the current offer is dummy
+Dec 01 14:13:23 <h4sh3d>	should be ready for tests on Friday
+Dec 01 14:13:57 <h4sh3d>	to go to reddit IMO we need a document explaining how to install and run farcaster
+Dec 01 14:14:33 <h4sh3d>	and command to follow the swap, ls info and progress should be sufficient
+Dec 01 14:14:53 <h4sh3d>	and those should allow making some automated backend for makers
+Dec 01 14:15:15 <h4sh3d>	that's what I've in mind, what else? or different?
+Dec 01 14:21:06 <TheCharlatan>	goals sound clear to me.
+Dec 01 14:22:29 <TheCharlatan>	but I would like to select the issues relevant for this.
+Dec 01 14:23:21 <zkao>	hi
+Dec 01 14:25:04 *	h4sh3d just finished a successfull swap, xmr sweep worked very well!
+Dec 01 14:25:27 <h4sh3d>	I'm writing an issue for swap progress content we could display
+Dec 01 14:26:34 <h4sh3d>	opening it even incomplete so you can react: https://github.com/farcaster-project/farcaster-node/issues/274
+Dec 01 14:30:15 <h4sh3d>	I guess: #274 #273 (#272) #262 (#194)
+Dec 01 14:39:11 <TheCharlatan>	I would add #233 #247
+Dec 01 14:41:45 <TheCharlatan>	can we agree on these?
+Dec 01 14:43:37 <h4sh3d>	does  #247 means we have to make sure refund/punish work?
+Dec 01 14:43:06 <TheCharlatan>	I guess so
+Dec 01 14:44:11 <lederstrumpf[m]>	> but I would like to select the issues relevant for this.
+Dec 01 14:44:11 <lederstrumpf[m]>	I've added a label `reddit requirement` to flag all the ones we should address before an upcoming community update - I'm tagging all the ones I think are relevant - feel free to change the label name etc.
+Dec 01 14:54:05 <TheCharlatan>	h4sh3d are you implying we should not spend time on refund/punish until then?
+Dec 01 14:55:20 <h4sh3d>	I think with this list we are fine
+Dec 01 14:55:48 <h4sh3d>	no, I just don't know what is the state of refund/punish path
+Dec 01 14:56:49 <TheCharlatan>	ok, looks like we have some clear goals now :)
+Dec 01 14:57:23 <zkao>	its a microstate
+Dec 01 14:57:25 <zkao>	haha
+Dec 01 15:02:11 <h4sh3d>	Whats your take on #274
+Dec 01 15:03:50 <TheCharlatan>	Flow looks good to me.
+Dec 01 15:05:02 <h4sh3d>	I added #170 (logs) and #171 (docker release) as logs will go with progress and release is a goal too
+Dec 01 15:05:30 <h4sh3d>	zkao do I work on swapd to try impl this flow for progress cmd?
+Dec 01 15:08:04 <TheCharlatan>	I have a bunch of comments though for #274, will add them on the issue.
+Dec 01 15:10:36 <zkao>	yes, im not sure either
+Dec 01 15:11:29 <zkao>	is that really needed for reddit?
+Dec 01 15:15:31 <TheCharlatan>	I would keep the state transition now, not really needed for the release in my eyes.
+Dec 01 15:16:25 <zkao>	TheCharlatan: now i understand why ur doing all that weird shit on the syncer with the addresses, monero address is not strict encoded, what a pain!
+Dec 01 15:17:58 <TheCharlatan>	Yep, we should implement consensus encoding for the monero address in core, then we can derive strict encoding in the node.
+Dec 01 15:24:33 <h4sh3d>	Currently on Bob maker progress return
+Dec 01 15:24:34 <h4sh3d>	Funding address: tb1qx78xnxj4wxjgy28cvs6v6f7an9cgcxh8ps446r
+Dec 01 15:24:34 <h4sh3d>	State transition: BobState(Commit) -> BobState(Reveal)
+Dec 01 15:25:15 <h4sh3d>	funding before the state commit -> reveal, is that just ordering msgs or we wait on funding before revealing?
+Dec 01 15:25:22 <zkao>	yes
+Dec 01 15:25:32 <zkao>	you cant reveal if you dont know the funding tx
+Dec 01 15:25:36 <zkao>	funding is not locking
+Dec 01 15:27:45 <h4sh3d>	what is needed in reveal that depends on funding?
+Dec 01 15:27:39 <zkao>	 tinyurl.com/3sa82xb4
+Dec 01 15:28:32 <zkao>	if this is wrong, this is a very late time for you to have noticed haha
+Dec 01 15:28:39 <zkao>	i thought the utxo
+Dec 01 15:30:55 <h4sh3d>	I've opened to sequence diagram already
+Dec 01 15:31:46 <h4sh3d>	It is not wrong, but strictly reveal is about keys, corearb is utxo
+Dec 01 15:30:43 <zkao>	maybe nothing is needed though, and its just there to block the flow
+Dec 01 15:32:03 <h4sh3d>	I think its fine in that order, but I guess we are not forced to do so
+Dec 01 15:32:18 <h4sh3d>	yes, and that's fine
+Dec 01 15:32:49 *	h4sh3d modifiy the issue with example flow to match what's currently impl
+Dec 01 15:33:25 <zkao>	given the structure of the diagram, and w/o looking at the code, it does look its just information flow control
+Dec 01 15:35:59 <zkao>	yeah, and like that both maker and taker transition smoothly from commit-reveal into swap-setup phases
+Dec 01 15:36:23 <zkao>	dropping their previous roles of maker and taker, and now being only alice and bob
+Dec 01 15:44:15 <h4sh3d>	#274 updated with your comments, is it good now?
+Dec 01 15:50:35 <zkao>	im trying to work through the issues
+Dec 01 15:50:51 <zkao>	is #274 really needed for reddit?
+Dec 01 15:53:25 <zkao>	^ 274 is pretty cool
+Dec 01 15:53:47 <zkao>	so that its clear here, there are more state transitions than shows up in the logs
+Dec 01 15:56:34 <zkao>	xmr locked event, for example, is a "microstate" transition within the BuySig macrostate
+Dec 01 15:57:01 <zkao>	not sure the computer science language for such things, maybe someone can translate
+Dec 01 16:03:28 <h4sh3d>	I understand what you mean. regarding reddit my take is that we will document progress for user to follow the swap
+Dec 01 16:03:07 <zkao>	TheCharlatan: left a comment on my own open PR #278 asking for help on use of wallet rpc client
+Dec 01 16:03:33 <TheCharlatan>	I can take a look in like half an hour or so.
+Dec 01 16:03:41 <zkao>	no stress
+Dec 01 16:05:40 <zkao>	the more i do, the more you guys want
+Dec 01 16:05:41 <zkao>	haha
+Dec 01 16:05:43 <zkao>	:P
+Dec 01 16:19:29 <zkao>	for debugging all things that will go wrong on the reddit tests, it would be important to distinguish all the different swaps at the log level
+Dec 01 16:20:54 <zkao>	i put a reddit label to #257
+Dec 01 16:22:43 <zkao>	can someone take that over
+Dec 01 16:22:47 <zkao>	?
+Dec 01 16:24:29 <h4sh3d>	I do
+Dec 01 16:23:52 <zkao>	i think the syncer maybe as well, cant recall
+Dec 01 16:27:44 <h4sh3d>	with (coin, net) ?
+Dec 01 16:28:13 <h4sh3d>	i can do that too, will see how heavy the logs become
+Dec 01 17:00:10 *	sgp_[m] has quit (Quit: You have been kicked for being idle)
+Dec 01 18:53:21 <zkao>	what do you mean by heavy?
+Dec 01 18:53:34 *	sgp_[m] (~sgpmatrix@2001:470:69fc:105::3825) has joined
+Dec 01 18:54:52 <h4sh3d>	long lines difficult to read, but I don't think it will
+Dec 01 18:55:21 <h4sh3d>	btw on main the "send monero at that address lock" is not in the logs anymore
+Dec 01 18:55:52 <h4sh3d>	was trying to figure out why, even with this commit https://github.com/farcaster-project/farcaster-node/commit/c03313b1de6db63f0b7e5049e2df3f3836a030d6
+Dec 01 18:56:00 <h4sh3d>	but then I went to MRL meeting
+Dec 01 18:56:15 <h4sh3d>	if you have any idea zkao I take it
+Dec 01 18:57:36 <zkao>	i guess i probably removed -- i'm on too many places at once :|
+Dec 01 18:57:57 <zkao>	the Progress requests i'm making sure its correct
+Dec 01 18:59:57 <h4sh3d>	yeah, no problem.  what i don't understand is after reintroducing it it doesn't show haha
+Dec 01 19:00:12 <h4sh3d>	I'll have a look again later, no worry
+Dec 01 19:06:53 <h4sh3d>	my bad, I'm a retard
+Dec 01 19:07:10 <h4sh3d>	reused the wrong command to install the bins
+

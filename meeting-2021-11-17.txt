@@ -1,0 +1,99 @@
+Nov 17 14:12:30 <h4sh3d>	Who's around for the meeting?
+Nov 17 14:11:37 <TheCharlatan>	so I guess zkao lederstrumpf , meeting start?
+Nov 17 14:12:01 <zkao>	hey
+Nov 17 14:14:05 <h4sh3d>	hello
+Nov 17 14:14:08 <TheCharlatan>	h4sh3d can you bring us up to speed to your work and doing some version bumps?
+Nov 17 14:16:21 <h4sh3d>	yes, if core contains all the changes we can do a release and update node
+Nov 17 14:16:35 <h4sh3d>	with core 0.4, monero 0.16, and latest monero-rpc
+Nov 17 14:17:23 <h4sh3d>	I'd like to land on node main some work (to be defined now) and test between us this afternoon some swap with the last changes (on main)
+Nov 17 14:17:26 <h4sh3d>	what do you think?
+Nov 17 14:16:48 <TheCharlatan>	yes, me too
+Nov 17 14:17:50 <h4sh3d>	IMO update core (with other deps) and #181 is important
+Nov 17 14:18:03 <h4sh3d>	#185 would be nice
+Nov 17 14:18:16 <h4sh3d>	the longer this one stays open the harder to merge it will become
+Nov 17 14:17:16 <TheCharlatan>	I'm testing #181 right now, seems to be working fine here.
+Nov 17 14:18:51 <h4sh3d>	nice, I rerun the CI because it hanged on functional test for more than 1h
+Nov 17 14:20:03 <h4sh3d>	can someone do the 0.4 release on core: https://github.com/farcaster-project/farcaster-core/blob/main/RELEASING.md
+Nov 17 14:20:37 <h4sh3d>	(I can do it, I know how it works :p but I want to test if the process is comprehensive and works)
+Nov 17 14:21:31 <TheCharlatan>	I'll do it :)
+Nov 17 14:23:35 <h4sh3d>	thanks
+Nov 17 14:22:55 <TheCharlatan>	zkao so what is your opinion on the merge commit/squash commit?
+Nov 17 14:23:59 <TheCharlatan>	I prefer single commits and a merge commit. What is your reasoning for squash commits h4sh3d?
+Nov 17 14:27:09 <zkao>	im not a big fan of squashing
+Nov 17 14:28:27 <h4sh3d>	The squash and merge can be automatic on github, so it helps when we do fixups and so on. but i don't have a strong opinion on it
+Nov 17 14:28:41 <h4sh3d>	ok, so we keep it like it is now
+Nov 17 14:27:44 <TheCharlatan>	ok, then lets keep it as is.
+Nov 17 14:29:31 <h4sh3d>	looks like #181 will fail in CI
+Nov 17 14:29:33 <h4sh3d>	test bitcoin_syncer_transaction_test_no_polling ... FAILED
+Nov 17 14:29:33 <h4sh3d>	test bitcoin_syncer_transaction_test_polling ... FAILED
+Nov 17 14:29:22 <zkao>	so my question is what is the minimum needed for a node release? so far identified: make a stateful client with access to bitcoin wallet for funding the swaps automatically and add support for multiple swaps at the same time. any other things i should work on?
+Nov 17 14:29:31 <zkao>	anything annoying getting on the way?
+Nov 17 14:30:55 <TheCharlatan>	I think that's it besides the open PR's and the stuff coming in from the deps.
+Nov 17 14:32:20 <h4sh3d>	Issues: #183 #176 and #170 should be resolved
+Nov 17 14:32:29 <h4sh3d>	with what zkao mentionned
+Nov 17 14:32:34 <h4sh3d>	and we are good to go IMO
+Nov 17 14:31:55 <zkao>	where do people find offers?
+Nov 17 14:34:43 <h4sh3d>	either in reddit comments, or we do a small webservice with a small front end (or a command in the cli)
+Nov 17 14:35:18 <h4sh3d>	but I think doing a service to register and list offers seems overkill for now, no?
+Nov 17 14:36:07 <h4sh3d>	do we marketing more the p2p side or the potential 'service' side, that's the question
+Nov 17 14:36:41 <zkao>	if the service is just a hacky one time thing, pushing what are the open offers, im fine with that
+Nov 17 14:38:35 <h4sh3d>	and no front-end, just a swap-cli command; to push and list offers
+Nov 17 14:37:50 <zkao>	ah, ur planning more complicated, than i let you do
+Nov 17 14:38:15 <TheCharlatan>	we can do this after this milestone. we can re-use comits approach with libp2p
+Nov 17 14:40:04 <h4sh3d>	I wasn't thinking more complicated, how to people interact with the hacky service?
+Nov 17 14:39:25 <zkao>	farcaster.dev/offers
+Nov 17 14:39:42 <zkao>	then they do a Ctl+C and Ctl+V hahaha
+Nov 17 14:41:24 <h4sh3d>	ok, so a small front-end to list offers
+Nov 17 14:41:31 <h4sh3d>	I'm fine with that
+Nov 17 14:41:54 <h4sh3d>	TheCharlatan: the idea is to feed people tests
+Nov 17 14:42:36 <h4sh3d>	otherwise you either have to test with yourself (maybe some will) or wait for someone that want to test at the same time than you
+Nov 17 14:43:05 <TheCharlatan>	ah, I see
+Nov 17 14:43:10 <zkao>	can we do a postmortem of why our reddit post was a failure?
+Nov 17 14:43:21 <zkao>	will be a failure*
+Nov 17 14:43:39 <TheCharlatan>	^^
+Nov 17 14:46:25 <h4sh3d>	IMO the complexity of running a swap will be deciding
+Nov 17 14:46:41 <h4sh3d>	and complexity of finding an available offer
+Nov 17 14:46:54 <h4sh3d>	that's the two thing I care about
+Nov 17 14:47:07 <zkao>	and by running i guess u mean setting up the software stack as well
+Nov 17 14:48:41 <h4sh3d>	yes
+Nov 17 14:49:01 <h4sh3d>	and for that this should help some IMO: https://github.com/farcaster-project/farcaster-node/blob/main/docker-compose.yml
+Nov 17 14:49:53 <h4sh3d>	+ having the swap-cli on your machine
+Nov 17 14:49:17 <zkao>	what is the percentage of reddit users used to docker-compose?
+Nov 17 14:49:50 <zkao>	anyway, i guess we will fail there for sure, because we're nerds :D
+Nov 17 14:51:20 <h4sh3d>	haha probably
+Nov 17 14:52:06 <h4sh3d>	but imagine if one has to setup bitcoincore, electrs, monerod, monero-wallet-rpc and our farcaster node :)
+Nov 17 14:52:21 <h4sh3d>	and make all config align
+Nov 17 14:52:23 <h4sh3d>	TheCharlatan: can you merge https://github.com/farcaster-project/farcaster-core/pull/177
+Nov 17 14:51:44 <lederstrumpf[m]>	ok, so since docker-compose will be too hard, let's compromise and water down by using a nix flake :P
+Nov 17 14:51:55 <TheCharlatan>	:D
+Nov 17 14:51:58 <zkao>	lulz
+Nov 17 14:53:37 <h4sh3d>	I think we found da way to do it ;p
+Nov 17 14:54:14 <TheCharlatan>	r.e. merging -core #177 seems like there is a changelog issue, no h4sh3d?
+Nov 17 14:56:51 <h4sh3d>	https://github.com/farcaster-project/farcaster-core/blob/release/0.4.0/CHANGELOG.md
+Nov 17 14:55:59 <TheCharlatan>	ah, nevermind, exactly
+Nov 17 14:57:21 <h4sh3d>	tag will be created after merge
+Nov 17 15:00:12 <h4sh3d>	farcaster core 0.4.0 have been release on crates.io, nice TheCharlatan
+Nov 17 15:01:41 <h4sh3d>	does everyone knows what to do to converge to the reddit post end of this month (or before ;P)
+Nov 17 15:02:18 <TheCharlatan>	I think so
+Nov 17 15:02:25 <zkao>	 ^
+Nov 17 15:03:49 <zkao>	we need retarded proof instructions that can copy pasted mostly without modification and in linear sequence
+Nov 17 15:04:03 <TheCharlatan>	So why is #181 failing with a different problem now?
+Nov 17 15:05:24 <h4sh3d>	yes, I'm on it (at least in my mental todolist), when draft is up I'll ping you guys to feedback
+Nov 17 15:06:13 <h4sh3d>	I don't understand why #181 does not work, testing locally again
+Nov 17 15:06:50 <TheCharlatan>	me neither, especially since I had it working before with the exact same fixup you committed now.
+Nov 17 15:12:37 <h4sh3d>	you run nightly locally?
+Nov 17 15:14:38 <zkao>	"Wen Farcaster sir?" <- rottenwheel: we say 2 weeks ^^ after we have clear instructions documented correctly, testing following them would be very helpful if you have the availability?
+Nov 17 15:15:46 <rottenwheel>	Whoa, are minds powerful? I was just lurking the meeting few moments ago.
+Nov 17 15:15:55 <rottenwheel>	Inb4 zkao is an oracle.
+Nov 17 15:16:41 <rottenwheel>	Yeah, ping me whenever and I'll accommodate. Hopefully it is good timing schedule wise. Thanks and keep it up.
+Nov 17 15:16:50 <zkao>	you see, you were chosen by the oracle to test
+Nov 17 15:18:04 <h4sh3d>	^^
+Nov 17 15:17:17 <rottenwheel>	Lol.
+Nov 17 16:20:56 <h4sh3d>	TheCharlatan: we should release new containers for the dependencies, e.g. electrs is now at 0.9.* and we built 0.8.11
+Nov 17 16:20:41 <TheCharlatan>	yeah true, lets work on that tomorrow.
+Nov 17 17:19:33 <h4sh3d>	lederstrumpf[m]: what's the strategy for #185?  I don't know if we should test that branch specifically or just merge in main after your review, wait on #181 that is 99% done (we fixed everything with TheCharlatan) and core update, then we intensively tests main with everything
+Nov 17 17:42:35 <h4sh3d>	Core udpate for node is ready https://github.com/farcaster-project/farcaster-node/pull/188
+Nov 17 18:24:07 <h4sh3d>	PR 181, 185, and 188 should be ready (if CI passes)
+Nov 17 18:24:32 <h4sh3d>	I let you guys see how you want to review and in which sequence you wanna merge
+Nov 17 18:24:56 <h4sh3d>	I guess it's easier for others to rebase on #185 than the reverse
+Nov 17 18:25:14 <h4sh3d>	gonna be afk now, ping me if needed

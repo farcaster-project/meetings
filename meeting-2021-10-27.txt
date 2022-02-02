@@ -1,0 +1,87 @@
+Oct 27 14:04:04 <zkao>	hey
+Oct 27 14:08:35 <h4sh3d>	Hi
+Oct 27 14:09:02 <TheCharlatan>	hello
+Oct 27 14:09:12 <lederstrumpf[m]>	hi
+Oct 27 14:11:15 <zkao>	i changed the command.rs api a bit, now it takes the external bitcoin address
+Oct 27 14:11:33 <zkao>	i change the order of SwapRole as well, because that is a mandatory parameter
+Oct 27 14:11:46 <zkao>	so it breaks any automated test
+Oct 27 14:12:10 <zkao>	and i added the --without-validation flag to Take command
+Oct 27 14:12:30 <zkao>	and added a prompt for manual validation, in case that flag isnt set
+Oct 27 14:13:07 <zkao>	I tested pushing and storing progress in farcasterd, from progress reports from swapd
+Oct 27 14:13:25 <zkao>	that the swap-cli can fetch at will
+Oct 27 14:14:23 <zkao>	started using farcaster::Network
+Oct 27 14:14:45 <zkao>	changed serviceid of syncer<Coin> to syncer<Coin, Network>
+Oct 27 14:15:48 <zkao>	so TheCharlatan, please do not touch the lnpbp Network definitions please, or remove them completely if anything
+Oct 27 14:17:30 <TheCharlatan>	nice, and yes, will do.
+Oct 27 14:18:43 <h4sh3d>	zkao: i don’t remember what is the state for the binding ip and “public” ip
+Oct 27 14:19:07 <h4sh3d>	Is it in a state we can test?
+Oct 27 14:19:13 <zkao>	TheCharlatan nerged that PR on Friday
+Oct 27 14:19:19 <zkao>	merged*
+Oct 27 14:19:41 <zkao>	sure, h4sh3d, its tested
+Oct 27 14:19:55 <h4sh3d>	Awesome!
+Oct 27 14:20:51 <zkao>	for a smooth ux, the wiping is missing, but i know you think that is not needed
+Oct 27 14:21:23 <zkao>	but TheCharlatan and I think otherwise, nobody will test if its too hard to test
+Oct 27 14:22:22 <h4sh3d>	I think you right
+Oct 27 14:22:52 <lederstrumpf[m]>	nice work zkao! trying it out now.
+Oct 27 14:24:11 <zkao>	lederstrumpf[m]: try on #150
+Oct 27 14:24:30 <zkao>	it builds linearly on the previous PRs
+Oct 27 14:24:45 <zkao>	#148, 149
+Oct 27 14:28:22 <h4sh3d>	Regarding my work: I finished the pr review for the multisig refactor by koe yesterday
+Oct 27 14:29:01 <h4sh3d>	That was a fun journey; it is beneficial because I was also able to learn a bit more about MuSig2
+Oct 27 14:29:25 <h4sh3d>	Which will now will be our next step ;)
+Oct 27 14:29:36 <h4sh3d>	*we
+Oct 27 14:29:47 <h4sh3d>	*know
+Oct 27 14:30:13 <h4sh3d>	dammit
+Oct 27 14:31:39 <lederstrumpf[m]>	@zkao: both `main` & #150 don't compile for me - are you using a local fork of core?
+Oct 27 14:32:02 <zkao>	no
+Oct 27 14:33:35 <h4sh3d>	Rustc version?
+Oct 27 14:34:32 <zkao>	so i will be offline for the next week
+Oct 27 14:34:47 <zkao>	it tried my best to finish it by today
+Oct 27 14:35:23 <zkao>	it would be cool if you guys go to reddit during this next week
+Oct 27 14:35:52 <lederstrumpf[m]>	h4sh3d: rustc 1.56.0
+Oct 27 14:35:52 <zkao>	i thought we were doing it today
+Oct 27 14:36:50 <h4sh3d>	Doing what ?
+Oct 27 14:36:57 <zkao>	going to reddit
+Oct 27 14:37:04 <zkao>	to post
+Oct 27 14:38:24 <h4sh3d>	You want to post with the binary ready to test? Or people install by themselves
+Oct 27 14:39:06 <zkao>	I have no opinions on this anymore
+Oct 27 14:39:49 <lederstrumpf[m]>	I'd say install by themselves.
+Oct 27 14:40:09 <zkao>	I had, but then i have to do everything alone, so better not have opinions
+Oct 27 14:40:14 <zkao>	:D
+Oct 27 14:40:47 <h4sh3d>	If we make main stable and people install themselves yes, but I was convinced by your arguments of making it simple for reddit
+Oct 27 14:41:15 <h4sh3d>	And at this time one more week is not much, and I have time to work on that too
+Oct 27 14:41:29 <h4sh3d>	Since last week I didn’t help
+Oct 27 14:41:43 <zkao>	nor no one else, afaik
+Oct 27 14:43:03 <lederstrumpf[m]>	well, then we make it simple for reddit people ;) it's more a matter of the cycle going from user feedback -> fix reaching users, which is more efficient if they have to install by themselves anyway. but weakly held opinion.
+Oct 27 14:43:16 <lederstrumpf[m]>	quick update from me: I joined a hackathon team over the weekend doing ETH-XMR in Go:
+Oct 27 14:43:16 <lederstrumpf[m]>	https://devpost.com/software/eth-xmr-atomic-swap
+Oct 27 14:43:33 <lederstrumpf[m]>	the repo is here: https://github.com/noot/atomic-swap
+Oct 27 14:46:34 <h4sh3d>	What is the plan for this project lederstrumpf[m]
+Oct 27 14:53:14 <zkao>	before discussing new venues, can we please finish focus for a limited amount of time on just getting something usable?
+Oct 27 14:54:51 <zkao>	or to set a boring plan on how to achieve that
+Oct 27 14:55:13 <h4sh3d>	I want to focus on the node to reach Reddit next week, might be after zkao come back or before that will depend if we manage to do all during is time off
+Oct 27 14:55:37 <zkao>	i am working, but not on farcaster
+Oct 27 14:56:24 <h4sh3d>	If i understand the situation core doesn’t need update, just node need “finalization” for the first round of testing
+Oct 27 14:56:33 <h4sh3d>	So I’ll focus on that
+Oct 27 14:57:12 <h4sh3d>	Then write the Reddit post explaining how to test, and for that we may want to provide one or two offers waiting for takers
+Oct 27 14:57:30 <zkao>	what is "finalization"?
+Oct 27 14:57:36 <h4sh3d>	So the first curious tester can directly go and take
+Oct 27 14:58:38 <h4sh3d>	Merging what’s need to be merge in main, stabilize all feature we want to include (e.g swiping), and making sure everything compiles with what we explain in the readme
+Oct 27 14:58:47 <h4sh3d>	But I’m sure all of this is not much
+Oct 27 14:59:15 <h4sh3d>	You already updated the readme recently
+Oct 27 14:59:21 <zkao>	from my side node is final, except for the monero staying locked in the end (and keys printed)
+Oct 27 14:59:27 <zkao>	TheCharlatan: any update on that?
+Oct 27 14:59:40 <h4sh3d>	Final on #150 right?
+Oct 27 14:59:47 <zkao>	correct ^
+Oct 27 15:04:20 <zkao>	i still think its a good idea for the CI to produce binaries of the releases, as previously discussed
+Oct 27 15:04:46 <h4sh3d>	Yes, that’s part of my “finalization” master plan haha
+Oct 27 15:05:42 <zkao>	take over the release then!
+Oct 27 15:06:22 <zkao>	the only think i want to integrate is spending the monero
+Oct 27 15:06:22 <h4sh3d>	Ok
+Oct 27 15:06:35 <h4sh3d>	Gotcha
+Oct 27 15:06:42 <zkao>	it should take a couple of hours
+Oct 27 15:10:24 <h4sh3d>	Ok, I’ll give feedback on Friday here on what I did, will do for going to Reddit
+Oct 27 15:10:34 <h4sh3d>	Anything else to discuss now?
+Oct 27 15:13:36 <h4sh3d>	Ok, then I think we can adjourn. Thanks everyone
+Oct 27 18:03:30 <TheCharlatan>	zkao yes, I will have all my fixes in the sweep PR by later tonight.
+Oct 27 18:05:24 <TheCharlatan>	I worked on some patches to improve the monero daemon and wallet rpc error messages as well. I'll see if I can submit them upstream.

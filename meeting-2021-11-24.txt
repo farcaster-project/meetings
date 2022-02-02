@@ -1,0 +1,76 @@
+Nov 24 13:57:48 <h4sh3d>	meeting this afternoon normally!
+Nov 24 14:08:35 <TheCharlatan>	so, now?
+Nov 24 14:13:40 <h4sh3d>	Who's arround?
+Nov 24 14:12:47 *	zkao sips his coffee on an attempt to wake up
+Nov 24 14:15:00 <TheCharlatan>	since you reminded us of the meeting h4sh3d, what do you want to talk about?
+Nov 24 14:17:22 <h4sh3d>	hah
+Nov 24 14:17:43 <h4sh3d>	when opening #230 yesterday
+Nov 24 14:17:58 <h4sh3d>	I though about just modify some little arguments in the command line
+Nov 24 14:18:26 <h4sh3d>	but now, to make it better and more correct, I'm in a rabbit hole for managing arguments and config file
+Nov 24 14:18:27 <h4sh3d>	:)
+Nov 24 14:19:03 <h4sh3d>	so currently I'm working on how the bins take their args and load their config
+Nov 24 14:19:55 <h4sh3d>	The idea is to have a file (e.g. farcaster.toml), somewhere, that contains config such as the syncers server url, or any other stuff microservice need to know
+Nov 24 14:20:12 <h4sh3d>	and stuff that is not passed in arguments at launch
+Nov 24 14:20:36 <h4sh3d>	the file is loaded with the flag -c when launching a service
+Nov 24 14:21:09 <h4sh3d>	my current issue is the Config struct in node is created based on arguments
+Nov 24 14:21:39 <h4sh3d>	and this is used in part of the code I wouldn't touch hopefully
+Nov 24 14:22:11 <h4sh3d>	so I'm finding a good way to make it work without touching the service.rs file
+Nov 24 14:22:24 <h4sh3d>	that's it
+Nov 24 14:23:18 <h4sh3d>	otherwise I did multiple swap over the network with different computers, its running really good and stable (the network stack)
+Nov 24 14:23:44 <h4sh3d>	what about you TheCharlatan?
+Nov 24 14:25:25 <TheCharlatan>	I've mostly been working on the functional test and testing PR's. There's still a lot of weird syncer behavior that I am trying to bisect, but I feel like a lot of it is the syncer polling too often.
+Nov 24 14:26:17 <TheCharlatan>	h4sh3d will we still be able to pass all the arguments directly to farcaster-node after your #230?
+Nov 24 14:26:35 <zkao>	h4sh3d: cool that you tested, TheCharlatan, is there is some interference  btw swaps when connecting to the same wallet rpc
+Nov 24 14:26:37 <zkao>	?
+Nov 24 14:26:50 <TheCharlatan>	Would be nice if it could generate the config file from the args if no file is given yet.
+Nov 24 14:27:45 <TheCharlatan>	zkao multiple swaps should not be a problem, multiple syncers using the same wallet-rpc definitely is a problem.
+Nov 24 14:27:57 <zkao>	h4sh3d: can u specify the priority sequence, between passing the argument, reading the $FARCASTER_ terminal values, and the config toml?
+Nov 24 14:30:08 <h4sh3d>	argument and $FARCASTER_ env values are managed by clap (don't know who take over the other, but I guess arg > env)
+Nov 24 14:31:06 <h4sh3d>	and config is in toml (different that what in args), if no toml we load default values (like we do in args), with toml file we override the defaults
+Nov 24 14:31:30 <h4sh3d>	and for know the only thing that move from the args to the config file is the syncers urls
+Nov 24 14:32:17 <h4sh3d>	so without -c default URLs are loaded, with -c we override with what's inside the config file
+Nov 24 14:32:26 <h4sh3d>	that's the idea, what do you think?
+Nov 24 14:31:32 <TheCharlatan>	so you will only be able to specify the url's by the config file?
+Nov 24 14:31:47 <zkao>	yesterday i was a bit stressed, and not sure i expressed myself correctly on my communication in github regarding this stuff
+Nov 24 14:32:03 <zkao>	so i guess lets try to sort out it works for everybody's work flow
+Nov 24 14:33:14 <h4sh3d>	TheCharlatan: yes, that was the idae
+Nov 24 14:33:17 <h4sh3d>	*idea
+Nov 24 14:34:00 <h4sh3d>	If I take a step back:
+Nov 24 14:35:04 <h4sh3d>	the config file can from this thought: if we control only with args, syncer will receive its urls with args, but because it is started by farcasterd
+Nov 24 14:36:01 <h4sh3d>	either we have to pass all syncers args when starting fcd (what we do currently), or syncer has another source to get the config: a config file (shared by all services, but that can change)
+Nov 24 14:36:13 <h4sh3d>	that was my thinking
+Nov 24 14:35:37 <zkao>	but farcasterd would read this config file?
+Nov 24 14:38:02 <h4sh3d>	if we need yes, if we want to put config related to fcd yes
+Nov 24 14:39:26 <h4sh3d>	for now I'm not sure what fcd need that is not needed by others
+Nov 24 14:40:07 <h4sh3d>	but because we launch fcd and swap-cli by hand it is easy to put everything in command line arguments
+Nov 24 14:41:09 <h4sh3d>	when I say specific I think of: syncer coin+network+urls, wallet coin?+network+?
+Nov 24 14:40:05 <zkao>	TheCharlatan: are you online?
+Nov 24 14:41:40 <h4sh3d>	and peerd already has some arg for listening of connecting
+Nov 24 14:41:56 <h4sh3d>	but its working and not related to swaps
+Nov 24 14:40:54 <TheCharlatan>	> so without -c default URLs are loaded, with -c we override with what's inside the config file
+Nov 24 14:41:05 <TheCharlatan>	so args will remain and will overwrite values in the config file?
+Nov 24 14:42:17 <h4sh3d>	no
+Nov 24 14:41:16 <zkao>	who takes the -c parameter?
+Nov 24 14:41:21 <zkao>	its a share one?
+Nov 24 14:42:31 <h4sh3d>	for now yes
+Nov 24 14:41:35 <zkao>	ok, now i get it
+Nov 24 14:41:48 <zkao>	can u point to some code, that PR is noisy
+Nov 24 14:43:22 <h4sh3d>	yes it is, lemme try to point to some code that is relevant (its heavily WIP on my side too)
+Nov 24 14:43:03 <TheCharlatan>	h4sh3d can you explain what you mean in the line I quoted again?
+Nov 24 14:43:20 <TheCharlatan>	Also, I'll be afk now, see you soon!
+Nov 24 14:44:43 <h4sh3d>	this https://github.com/farcaster-project/farcaster-node/pull/230/files#diff-cba64c21ab992eaad29fce147a08f4560a4769bc14682b8a96081a5fd02dbecd
+Nov 24 14:45:25 <h4sh3d>	parse_config function, takes the -c arg value, a path to the config file
+Nov 24 14:45:50 <h4sh3d>	parse it and try to return a Config struct
+Nov 24 14:46:43 <h4sh3d>	TheCharlatan: the cmd line arg are separated from the config "arg"
+Nov 24 14:47:05 <h4sh3d>	urls will not be managed by cmd arg but only with the file
+Nov 24 14:47:39 <h4sh3d>	in cmd arg you use the value -c to point to a file or not, if not we load the default config
+Nov 24 14:47:58 <h4sh3d>	config = src/config.rs "Config" struct in that case
+Nov 24 14:48:20 <h4sh3d>	let me push my latest WIP on that branch, the concept is the same
+Nov 24 14:47:45 <zkao>	the issue is that there are 2 levels of config that are compatible, and a third one overlayed that overwrites everything
+Nov 24 14:48:01 <zkao>	one with the shell variables and the command lines arguments
+Nov 24 14:48:28 <zkao>	these two are from clap and are compatible, the inherited ones
+Nov 24 14:48:52 <zkao>	and the third one, at a classical h4sh3d, overwrites all the rest lol
+Nov 24 14:53:05 <zkao>	the situation i want to avoid in farcasterd is to be forced to pass too many args if we're running swaps that requires say >3 different syncers
+Nov 24 14:54:12 <zkao>	whats the view on syncer in general?
+Nov 24 14:54:20 <zkao>	is it ok for farcasterd to launch them?
+Nov 24 14:58:21 <h4sh3d>	I think yes, fcd should manage the pool of syncers

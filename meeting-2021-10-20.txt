@@ -1,0 +1,46 @@
+Oct 20 13:43:12 <h4sh3d>	Meeting in 20 min here
+Oct 20 13:59:24 <h4sh3d>	Anyone around ? Ping TheCharlatan lederstrumpf[m] zkao and others :)
+Oct 20 14:05:42 <h4sh3d>	Let see if some join later, I can post some updates anyway
+Oct 20 14:06:23 <h4sh3d>	As mentioned on Monday I’m working on a review of #7877
+Oct 20 14:07:21 <h4sh3d>	It’s a key exchange update and refactor for the threshold sig
+Oct 20 14:08:23 <h4sh3d>	As I want to do the best review I can do crypto wise I’ve started refreshing some aspects about the scheme
+Oct 20 14:09:32 <h4sh3d>	I already had a quick look at the code to understand the structure but still looking at the theory described in multiple place (Z2Mv2, MRL 09, MuSig/2 papers, etc.)
+Oct 20 14:10:13 <zkao>	hey
+Oct 20 14:10:15 <h4sh3d>	I don’t know if I’ll be done by the end of this week or if I complete the review next week
+Oct 20 14:10:21 <h4sh3d>	Hello
+Oct 20 14:11:30 <TheCharlatan>	hello
+Oct 20 14:12:40 <zkao>	hey, i'm adding missing stuff. i added a pub offer validation prompt for taker
+Oct 20 14:13:18 <zkao>	im adding progress handler in farcasterd for clients to query about swaps
+Oct 20 14:14:25 <zkao>	its just pushing updates on state as of now, though, then a Client connects to farcasterd and pulls the updates
+Oct 20 14:21:13 <zkao>	h4sh3d: you said u have a commit adding an argument for some missing feature? why dont u PR it?
+Oct 20 14:21:26 <h4sh3d>	Shit, I think I lost my work on the network …
+Oct 20 14:21:37 <h4sh3d>	Was looking for it just now :)
+Oct 20 14:21:41 <zkao>	ah, no problem
+Oct 20 14:21:49 <h4sh3d>	I messed up
+Oct 20 14:22:06 <zkao>	git reflog hahah
+Oct 20 14:22:32 <h4sh3d>	It was on a stash that got clear I think… :(
+Oct 20 14:22:52 <h4sh3d>	But that was trivial change, I can redo it easily
+Oct 20 14:23:01 <h4sh3d>	and open a PR
+Oct 20 14:24:11 <zkao>	its a 10 line one PR, right?
+Oct 20 14:24:47 <zkao>	no need, just asking, but confirm whether u do or not
+Oct 20 14:25:41 <h4sh3d>	Yes, I had separated in cli opts the ip addr in bind and public ip addr
+Oct 20 14:26:00 <h4sh3d>	Then I used those when binding and in the offer
+Oct 20 14:26:03 <h4sh3d>	That’s it
+Oct 20 14:26:53 <h4sh3d>	I think you can add that change when you like zkao in one of your PR, as you already have changes on cli right
+Oct 20 14:30:13 <zkao>	ok
+Oct 20 14:31:27 <h4sh3d>	Just opened a draft for the Dockerfile update: #141 (not tested yet, it’s an old cherry pick)
+Oct 20 14:43:40 <zkao>	TheCharlatan: any luck on swiping the monero lock using the rust rpc lib or something else?
+Oct 20 14:57:51 <zkao>	h4sh3d, TheCharlatan: could we add building release binaries to the nodes CI?
+Oct 20 15:00:08 <h4sh3d>	Yes
+Oct 20 15:00:26 <h4sh3d>	I can pr that with the Docker one
+Oct 20 15:04:44 <zkao>	h4sh3d: thank you
+Oct 20 15:18:15 <h4sh3d>	TheCharlatan: any news about monero rpc upstream? He didn’t respond to me neither.
+Oct 20 15:19:35 <h4sh3d>	Dunno if the ecosystem (the org) has a plan in those cases
+Oct 20 15:20:09 <h4sh3d>	Not even sure it is considered I maintained as the guy committed on main
+Oct 20 15:27:40 <h4sh3d>	Asked ErCiccione if there is something in guidelines, even if I probably know the answer already.
+Oct 20 15:29:04 <h4sh3d>	Anyway let’s wait on is answer, if it is not satisfying then we do our rpc in monero-rs based on his work and his license. Like we did with the node with lnp node
+Oct 20 15:30:32 <h4sh3d>	You’d have received an invitation to be part of monero-rs org btw
+Oct 20 15:30:54 <h4sh3d>	That’s it for me, anything else? Otherwise I think we can adjourn
+Oct 20 17:59:13 <TheCharlatan>	No, no news from the monero-rpc-rs maintainer
+Oct 20 17:59:54 <TheCharlatan>	zkao, I hope I'll have a pull request open for swiping soon.
+Oct 20 18:00:19 <TheCharlatan>	still testing now, but should be done soon.

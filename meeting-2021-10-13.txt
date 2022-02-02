@@ -1,0 +1,18 @@
+Oct 13 14:06:56 <h4sh3d>	meeting now
+Oct 13 14:07:05 <h4sh3d>	who's around?
+Oct 13 14:06:33 <TheCharlatan>	I'm here
+Oct 13 14:18:41 <h4sh3d>	As mentioned on Monday, I was sick since last week and still am... so not much on my side this week
+Oct 13 14:19:43 <h4sh3d>	Overall when I was working I focused more on what around code than code (like CI automation, release management, etc.)
+Oct 13 14:20:15 <h4sh3d>	Mostly on monero-rs for now, but the goal is to applied all of this to farcaster next
+Oct 13 14:20:19 <h4sh3d>	that's it
+Oct 13 14:21:19 <h4sh3d>	also worked on a patch for the node to have binding address and public address differentiation while creating a public offer
+Oct 13 14:21:26 <h4sh3d>	so we can test over the network
+Oct 13 14:20:56 <TheCharlatan>	nice
+Oct 13 14:25:48 <TheCharlatan>	I'm still spending my time on the syncer, added some code this week to make reconnects possible if there is a networking error.
+Oct 13 14:26:59 <TheCharlatan>	now, I'm working on multi-server support. I don't have a good idea on how to architecture it yet though.
+Oct 13 14:29:14 <zkao>	im reviewing the dleq proof integration on swapd
+Oct 13 14:29:42 <zkao>	its pretty good, i have it working nicely, and completing the swap smoothly
+Oct 13 14:30:38 <zkao>	i should be able to merge it by tonight
+Oct 13 14:30:57 <lederstrumpf[m]>	cool, thanks
+Oct 13 14:31:53 <zkao>	TheCharlatan: what is the strategy for syncer PRs?
+Oct 13 14:37:43 <TheCharlatan>	I don't want to do more changes on the open PRs. I will close #127 again, #128 is just a small type change courtesy of the monero version bump, #126 is a complete overhaul of the syncer architecture.
