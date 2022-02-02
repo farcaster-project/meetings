@@ -1,0 +1,34 @@
+Feb 02 16:32:04 <h4sh3d>	meeting here in 30 min
+Feb 02 17:02:03 <h4sh3d>	Hello everyone! Who's around?
+Feb 02 17:00:19 <zkao>	hey
+Feb 02 17:00:51 <TheCharlatan>	whoop-whoop
+Feb 02 17:01:27 <lederstrumpf[m]>	hi
+Feb 02 17:04:47 <h4sh3d>	this week I've been working on the second review of monero PR #7877
+Feb 02 17:05:29 <h4sh3d>	vtnerd finished his last round of comment and patches have been applied so I'm having a last round too
+Feb 02 17:05:46 <h4sh3d>	I should be done by the end of the week and back in business with farcaster by then
+Feb 02 17:04:33 <localmonero05>	Nice.
+Feb 02 17:05:03 *	mfoolb has quit (Ping timeout: 276 seconds)
+Feb 02 17:05:23 <TheCharlatan>	gg h4sh3d
+Feb 02 17:05:44 <zkao>	i studied a bit the moderation at the level of rendez vous points, for banning bad actors in those points. like alices that dont lock their monero
+Feb 02 17:06:10 <zkao>	and after discussions with the others, i guess we can get something practical going
+Feb 02 17:12:12 <h4sh3d>	the idea is to integrate that king of networking in the node directly right? not having to start dozen of other software on the machine;  or you sees it as a layer ontop or above?
+Feb 02 17:11:20 <zkao>	i think its going to be an independent service that runs independent from the node
+Feb 02 17:11:27 <zkao>	but very small
+Feb 02 17:12:05 <TheCharlatan>	we spitballed some ideas offline to add some extra proof requirements for connecting with the rendez-vous point as an extra spam and griefing filter, like proving ownership of an output, but nothing tangible has arisen from this yet.
+Feb 02 17:13:28 *	mfoolb (~mfoolb@gateway/tor-sasl/mfoolb) has joined
+Feb 02 17:13:51 <zkao>	but it certainly looks much more tangible now than before
+Feb 02 17:16:44 <h4sh3d>	i really like the idea of output ownership that you can blacklist for a small amount of time, but we have to figure out a way that doesn't hurt privacy
+Feb 02 17:14:56 <MajesticBank>	any idea to support some kind of reputation points?
+Feb 02 17:17:12 <zkao>	For direct trades, one could locally assign a reputation. but if you try to gossip reputation, then you have to disclose your transactions and lose your privacy, in order to prove you are not lying about ur trades
+Feb 02 17:25:29 <TheCharlatan>	I opened a PR to monero-rs to implement serialization for the amount type. I think at this point I'll go through the node again and get rid of more raw types.
+Feb 02 17:28:46 <h4sh3d>	Do you want to change more stuff or do I start a review already?
+Feb 02 17:28:41 <TheCharlatan>	no changes on the amounts for now.
+Feb 02 17:28:56 <TheCharlatan>	Maybe I find other or better stuff along the way.
+Feb 02 17:32:40 <h4sh3d>	ok, i'll give it a go then
+Feb 02 17:31:03 <zkao>	i will get back into coding next week
+Feb 02 17:34:59 <h4sh3d>	I just pushed the logs I have for past meetings and will do this one when we done:  https://github.com/farcaster-project/meetings
+Feb 02 17:33:17 <zkao>	thank you
+Feb 02 17:35:39 <h4sh3d>	if you have more logs please complete.  in december we lost the schedule and we did a 1 month meeting haha
+Feb 02 17:36:15 <h4sh3d>	that's why there is now entry after 1st of dec.
+Feb 02 17:36:54 <h4sh3d>	for next week I want to play with rust-bitcoin last rc
+Feb 02 17:40:18 <h4sh3d>	alright, I think we can adjourn the meeting here.  thanks everyone for attending!
