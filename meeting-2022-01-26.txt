@@ -1,0 +1,90 @@
+Jan 26 17:01:34 <zkao>	16:00 UTC is now
+Jan 26 17:03:36 <h4sh3d>	Hi
+Jan 26 17:01:46 *	lederstrumpf[m] (~lederstru@2001:470:69fc:105::bc8) has joined
+Jan 26 17:01:48 <zkao>	TheCharlatan, h4sh3d, lederstrumpf[m]
+Jan 26 17:01:53 <TheCharlatan>	hello
+Jan 26 17:02:02 <zkao>	localmonero05:
+Jan 26 17:02:08 <localmonero05>	Hola. :)
+Jan 26 17:05:20 <h4sh3d>	What's the agenda?
+Jan 26 17:03:48 <zkao>	i'd guess the plan to move things into main net
+Jan 26 17:06:09 *	mfoolb has quit (Ping timeout: 276 seconds)
+Jan 26 17:08:46 <h4sh3d>	having a look at the current issue list its not obvious for me how to move forward to mainnet
+Jan 26 17:07:36 <zkao>	that is correct, i find we have to work out the issues for mainnet
+Jan 26 17:10:11 <h4sh3d>	do you think a new label is enough (as we did with reddit) or we need more work on the issues themselves?
+Jan 26 17:08:43 <zkao>	im not a super big fan of rushing into mainnet, but the alternate implementation doesnt look superior to ours, and it self-proclaims itself mainnet ready, so we have to deal with that
+Jan 26 17:09:24 <zkao>	maybe we ask in -community what is the take on this?
+Jan 26 17:11:11 <TheCharlatan>	I would equate any such "mainnet" milestone with {m3\gui}
+Jan 26 17:13:03 <h4sh3d>	we have the roadmap with milestone 3
+Jan 26 17:13:27 <h4sh3d>	which is not really specific to mainnet
+Jan 26 17:13:40 <h4sh3d>	its more: node + crypto + gui/tui/ux
+Jan 26 17:13:59 <h4sh3d>	part of it makes it ready for mainnet IMO
+Jan 26 17:14:41 <h4sh3d>	and some is independent: having a tui is not linked to mainnet readyness but more about user using the stuff
+Jan 26 17:14:53 <h4sh3d>	that's how I see M3
+Jan 26 17:13:33 <localmonero05>	there's a community meeting this Sunday zkao. You can bring it up during the meeting, possibly. https://github.com/monero-project/meta/issues/653
+Jan 26 17:13:51 <localmonero05>	or you can PM luigi1111 as well.
+Jan 26 17:13:53 <zkao>	we could make it mainnet prior to finishing M3, TheCharlatan, maybe we hardcode a threshold for amounts, so that people dont burn their xmr
+Jan 26 17:13:56 *	mfoolb (~mfoolb@gateway/tor-sasl/mfoolb) has joined
+Jan 26 17:14:22 <zkao>	say 0.1 xmr max or something, else fail
+Jan 26 17:14:43 <zkao>	?
+Jan 26 17:14:56 <TheCharlatan>	maybe 1xmr with the recent price developmnt ^^
+Jan 26 17:16:53 <h4sh3d>	haha
+Jan 26 17:15:40 <TheCharlatan>	so if mainnet is some subset of the m3 milestone, I'm sure we can identify some issues and label them.
+Jan 26 17:18:26 <h4sh3d>	I don't know if anyone else share this view of mainnet> subset of M3
+Jan 26 17:19:46 <zkao>	so what is the plan?
+Jan 26 17:23:12 <h4sh3d>	for crypto: decide if we keep ecdsa or migrate over taproot only
+Jan 26 17:23:38 <h4sh3d>	then try to find the new dependency to use (e.g. https://github.com/ElementsProject/secp256k1-zkp/tree/master/src/modules/ecdsa_adaptor)
+Jan 26 17:21:47 *	afungible[m] (~afungible@2001:470:69fc:105::1:747c) has left
+Jan 26 17:24:05 <zkao>	are all the dependencies for taproot ready upstream?
+Jan 26 17:26:27 <h4sh3d>	I've to check again as it moved quite fast during end of the year
+Jan 26 17:25:00 *	localmonero06 has quit (Quit: Leaving)
+Jan 26 17:27:02 <h4sh3d>	0.28.0-rc1 8 days ago
+Jan 26 17:27:11 <h4sh3d>	for rust-bitcoin
+Jan 26 17:27:31 <h4sh3d>	and I think most of our needs is inside (that I didn't check)
+Jan 26 17:26:15 <zkao>	what about ecdsa remains with the ecdsafun lib as it is, and for taproot we make it proper
+Jan 26 17:30:53 <h4sh3d>	it may be the easiest path, and a proper one
+Jan 26 17:31:12 <h4sh3d>	(looks like we have enough to start testing with 0.28.0-rc1)
+Jan 26 17:31:27 <h4sh3d>	8 days ago, what a perfect timing :)
+Jan 26 17:29:43 <TheCharlatan>	great :)
+Jan 26 17:31:04 <zkao>	the syncer and swap-cli have some criteria that seem unnecessary
+Jan 26 17:31:36 <zkao>	> enable pattern such as: do X if Y
+Jan 26 17:31:50 <zkao>	im here: https://ccs.getmonero.org/proposals/h4sh3d-atomic-swap-implementation.html
+Jan 26 17:32:30 <zkao>	i think we all agree that syncer is trusted at this point, or am I wrong about that?
+Jan 26 17:32:58 <zkao>	so the person running the syncer is the same as the one running the swap
+Jan 26 17:37:18 <h4sh3d>	it's trusted because if the syncer does not broadcast some transaction use can be punished
+Jan 26 17:37:43 <h4sh3d>	which is a bit stronger than the blockchain node itself
+Jan 26 17:38:19 <h4sh3d>	but the syncer cannot broadcast a transaction that would be invalid protocol wise
+Jan 26 17:36:52 <TheCharlatan>	Not sure though if it makes sense to push some of the broadcast logic into the syncer. At some point it just becomes like the swap daemon.
+Jan 26 17:38:59 <h4sh3d>	so if I'm not mistaken, you could consider it at the same level of blockchain fullnode if we have replication to ensure at least one will broadcast
+Jan 26 17:39:55 <h4sh3d>	I agree it is similar to swap daemon then
+Jan 26 17:39:08 <zkao>	ok, i guess we're agreeing
+Jan 26 17:39:54 <TheCharlatan>	yeah, so I cast my vote against implementing that.
+Jan 26 17:42:03 <h4sh3d>	me too
+Jan 26 17:40:24 <zkao>	same
+Jan 26 17:43:46 <h4sh3d>	talking about syncers, replacing the monero-wallet-rpc part with lws
+Jan 26 17:41:59 <zkao>	so it will always be one syncer per chain, and then if we don't want to trust full-node, we must connect to many?
+Jan 26 17:42:20 <zkao>	... many full nodes
+Jan 26 17:44:46 <h4sh3d>	I think so
+Jan 26 17:45:59 <h4sh3d>	IIRC the idea of non trusted syncer came while thinking about mobile context
+Jan 26 17:46:34 <h4sh3d>	to reduce the number of task the phone has to do
+Jan 26 17:46:56 <h4sh3d>	again, that's my recall
+Jan 26 17:47:57 <h4sh3d>	but I don't think we should include that type of constrains
+Jan 26 17:46:19 <zkao>	mobile and liveness don't go together too well
+Jan 26 17:48:20 <h4sh3d>	so 1 syncer many node (for extra validation if wanted) is enough IMO
+Jan 26 17:48:10 <TheCharlatan>	or we do some form of SPV, but that's out of scope imo.
+Jan 26 17:50:36 <h4sh3d>	yeah, better having a box at home that stays live and runs all farcaster services so phone UI connects to that (maybe even with internet redundancy)
+Jan 26 17:51:28 <h4sh3d>	but swaps that take 40 mins to complete will not be done on a phone
+Jan 26 17:52:06 <h4sh3d>	so you need channels and channel will require this kind of box or will delegate stuff elsewhere and it gets more and more complicated... haha
+Jan 26 17:52:38 <h4sh3d>	out of scope yes :)
+Jan 26 18:00:16 <h4sh3d>	do we keep farcaster.dev running?
+Jan 26 17:58:40 <zkao>	mainnet! hahha
+Jan 26 17:59:18 <localmonero05>	farcaster.dev<->farcaster.main?
+Jan 26 17:59:57 *	rottenwheel (~rottenwhe@user/rottenwheel) has left
+Jan 26 18:08:14 <h4sh3d>	MRL meeting starting, anything else we should decide now? we restart weekly meetings from now? 16h UTC again?
+Jan 26 18:06:37 <zkao>	todos: list issues of what seems necessary to mainnet and tag it accordingly, ask feedback for community on how to approach mainnet
+Jan 26 18:07:15 *	mfoolb has quit (Ping timeout: 276 seconds)
+Jan 26 18:07:15 <localmonero05>	h4sh3d zkao let me know if you'll be restarting weekly meetings so I can make sure to include them in each revuo issue. :)
+Jan 26 18:07:36 <localmonero05>	or if you prefer not to be listed in there, that's fine as well. Your call.
+Jan 26 18:08:13 <zkao>	h4sh3d, localmonero05 : yes, i guess we should seek more community engagement as we're settling on the structure of the software
+Jan 26 18:08:33 <localmonero05>	Ack. Thanks for kicking them back up.
+Jan 26 18:09:29 <zkao>	thanks for pushing for it :P
+
